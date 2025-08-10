@@ -6,6 +6,7 @@ import { Logo } from '@/components/icons/Logo';
 const placeholderImages = {
   background: 'https://placehold.co/1920x1080.png',
   rotatingGraphic: 'https://drive.google.com/uc?export=view&id=14VEQNyBBZJNPzPnTIFbDLJBjSrTZsSHf',
+  logo: 'https://drive.google.com/uc?export=view&id=1CpgY00g6FnFXzUg78cWSMVtZYbzsp3qp',
 };
 
 export default function WaitlistPage() {
@@ -20,7 +21,7 @@ export default function WaitlistPage() {
         data-ai-hint="abstract background"
       />
       <div className="absolute top-8 left-1/2 -translate-x-1/2">
-        <Logo className="h-12 w-12 text-primary" />
+        <Image src={placeholderImages.logo} width="48" height="48" alt="Logo" data-ai-hint="company logo" />
       </div>
       <div className="space-y-4 bg-background/50 backdrop-blur-sm p-8 rounded-lg">
         <h1 className="animate-in fade-in zoom-in-95 duration-500 text-4xl font-bold tracking-tighter text-primary sm:text-5xl md:text-6xl">
