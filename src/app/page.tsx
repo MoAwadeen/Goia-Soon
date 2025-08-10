@@ -33,7 +33,7 @@ export default function WaitlistPage() {
         height="200"
         alt="Rotating graphic"
         data-ai-hint="geometric shape"
-        className="absolute -bottom-24 -right-24 animate-spin-slow"
+        className="absolute -bottom-20 -right-20 animate-spin-slow"
       />
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center space-x-6">
         <Link href="#" prefetch={false}>
