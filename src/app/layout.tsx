@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'Goia - Your Gateway to a New Experience',
-  description: 'Download Goia today and unlock a world of possibilities. Available on iOS and Android.',
+  title: 'Goia - Coming Soon to the USA',
+  description: 'Goia is coming soon to the USA. Sign up to get notified when we launch.',
 };
 
 export default function RootLayout({
