@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Twitter, Instagram, Mail } from 'lucide-react';
+import { Linkedin, Instagram, Mail, Facebook } from 'lucide-react';
 import Link from 'next/link';
 
 const placeholderImages = {
@@ -36,15 +36,19 @@ export default function WaitlistPage() {
         className="absolute -bottom-20 -right-20 animate-spin-slow"
       />
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center space-x-6">
-        <Link href="#" prefetch={false}>
-          <Twitter className="h-6 w-6 text-primary hover:text-primary-foreground transition-colors" />
-          <span className="sr-only">Twitter</span>
+        <Link href="https://www.linkedin.com/company/goiaapp/" target="_blank" prefetch={false}>
+          <Linkedin className="h-6 w-6 text-primary hover:text-primary-foreground transition-colors" />
+          <span className="sr-only">LinkedIn</span>
         </Link>
-        <Link href="#" prefetch={false}>
+        <Link href="https://www.instagram.com/goia.app?igsh=eWdhdmlkNGh3YWox&utm_source=qr" target="_blank" prefetch={false}>
           <Instagram className="h-6 w-6 text-primary hover:text-primary-foreground transition-colors" />
           <span className="sr-only">Instagram</span>
         </Link>
-        <Link href="#" prefetch={false}>
+        <Link href="https://www.facebook.com/profile.php?id=61563305546037" target="_blank" prefetch={false}>
+          <Facebook className="h-6 w-6 text-primary hover:text-primary-foreground transition-colors" />
+          <span className="sr-only">Facebook</span>
+        </Link>
+        <Link href="mailto:youssef.talaat@goia.app" prefetch={false}>
           <Mail className="h-6 w-6 text-primary hover:text-primary-foreground transition-colors" />
           <span className="sr-only">Email</span>
         </Link>
