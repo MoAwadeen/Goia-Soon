@@ -7,7 +7,11 @@ export const metadata: Metadata = {
   title: 'Goia - Coming Soon to the US',
   description: 'Goia is coming soon to the US. Sign up to get notified when we launch.',
   icons: {
-    icon: 'https://drive.google.com/uc?export=view&id=1jRz7HMV7vaRT9bJgdKm_PscgEUeR3zf0',
+    icon: [
+      { url: 'https://drive.google.com/uc?export=view&id=1jRz7HMV7vaRT9bJgdKm_PscgEUeR3zf0', sizes: 'any' },
+    ],
+    shortcut: 'https://drive.google.com/uc?export=view&id=1jRz7HMV7vaRT9bJgdKm_PscgEUeR3zf0',
+    apple: 'https://drive.google.com/uc?export=view&id=1jRz7HMV7vaRT9bJgdKm_PscgEUeR3zf0',
   },
 };
 

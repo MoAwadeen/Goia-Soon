@@ -50,7 +50,7 @@ export default function WaitlistPage() {
             <Facebook className="h-6 w-6 text-primary hover:text-primary-foreground transition-colors" />
             <span className="sr-only">Facebook</span>
           </Link>
-          <Link href="mailto:youssef.talaat@goia.app" prefetch={false}>
+          <Link href="https://mail.google.com/mail/?view=cm&fs=1&to=youssef.talaat@goia.app" target="_blank" prefetch={false}>
             <Mail className="h-6 w-6 text-primary hover:text-primary-foreground transition-colors" />
             <span className="sr-only">Email</span>
           </Link>
