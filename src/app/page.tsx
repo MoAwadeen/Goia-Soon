@@ -23,7 +23,7 @@ export default function WaitlistPage() {
         <Image src={placeholderImages.logo} width="128" height="128" alt="Logo" data-ai-hint="company logo" />
       </div>
       <div className="space-y-4">
-        <h1 className="animate-in fade-in zoom-in-95 duration-500 text-4xl font-bold tracking-tighter text-primary-foreground drop-shadow-lg sm:text-5xl md:text-6xl">
+        <h1 className="animate-in fade-in zoom-in-95 duration-500 text-4xl font-bold tracking-tighter text-primary drop-shadow-lg sm:text-5xl md:text-6xl">
           Wait for us, coming soon
         </h1>
       </div>
@@ -37,15 +37,15 @@ export default function WaitlistPage() {
       />
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center space-x-6">
         <Link href="#" prefetch={false}>
-          <Twitter className="h-6 w-6 text-primary-foreground hover:text-primary transition-colors" />
+          <Twitter className="h-6 w-6 text-primary hover:text-primary-foreground transition-colors" />
           <span className="sr-only">Twitter</span>
         </Link>
         <Link href="#" prefetch={false}>
-          <Instagram className="h-6 w-6 text-primary-foreground hover:text-primary transition-colors" />
+          <Instagram className="h-6 w-6 text-primary hover:text-primary-foreground transition-colors" />
           <span className="sr-only">Instagram</span>
         </Link>
         <Link href="#" prefetch={false}>
-          <Mail className="h-6 w-6 text-primary-foreground hover:text-primary transition-colors" />
+          <Mail className="h-6 w-6 text-primary hover:text-primary-foreground transition-colors" />
           <span className="sr-only">Email</span>
         </Link>
       </div>
