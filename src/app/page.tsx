@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Logo } from '@/components/icons/Logo';
 
 const placeholderImages = {
-  background: 'https://placehold.co/1920x1080.png',
+  background: 'https://drive.google.com/uc?export=view&id=1jeixPZMYCompO1rUxvQEXs26E_uYIsnD',
   rotatingGraphic: 'https://drive.google.com/uc?export=view&id=14VEQNyBBZJNPzPnTIFbDLJBjSrTZsSHf',
   logo: 'https://drive.google.com/uc?export=view&id=1CpgY00g6FnFXzUg78cWSMVtZYbzsp3qp',
 };
