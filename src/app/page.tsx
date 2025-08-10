@@ -1,4 +1,6 @@
 import Image from 'next/image';
+import { Twitter, Instagram, Mail } from 'lucide-react';
+import Link from 'next/link';
 
 export default function WaitlistPage() {
   return (
@@ -16,6 +18,20 @@ export default function WaitlistPage() {
         data-ai-hint="geometric shape"
         className="absolute -bottom-24 -right-24 animate-spin-slow"
       />
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center space-x-6">
+        <Link href="#" prefetch={false}>
+          <Twitter className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+          <span className="sr-only">Twitter</span>
+        </Link>
+        <Link href="#" prefetch={false}>
+          <Instagram className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+          <span className="sr-only">Instagram</span>
+        </Link>
+        <Link href="#" prefetch={false}>
+          <Mail className="h-6 w-6 text-muted-foreground hover:text-primary transition-colors" />
+          <span className="sr-only">Email</span>
+        </Link>
+      </div>
     </div>
   );
 }
