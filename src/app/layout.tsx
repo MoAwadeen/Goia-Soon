@@ -4,8 +4,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
-  title: 'Goia - Coming Soon to the US',
-  description: 'Goia is coming soon to the US. Sign up to get notified when we launch.',
+  title: 'Goia - Coming Soon!',
+  description: 'Goia is coming soon, Stay tuned!',
   icons: {
     icon: [
       { url: 'https://drive.google.com/uc?export=view&id=1jRz7HMV7vaRT9bJgdKm_PscgEUeR3zf0', sizes: 'any' },
