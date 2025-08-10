@@ -1,12 +1,13 @@
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: 'Goia - Coming Soon to the US',
   description: 'Goia is coming soon to the US. Sign up to get notified when we launch.',
   icons: {
-    icon: 'https://drive.google.com/uc?export=view&id=1jRz7HMV7vaRT9bJgdKm_PscgEUeR3zf0',
+    icon: 'https://drive.google.com/file/d/1jRz7HMV7vaRT9bJgdKm_PscgEUeR3zf0/view?usp=drive_link',
   },
 };
 
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className="font-body antialiased">
         {children}
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );
