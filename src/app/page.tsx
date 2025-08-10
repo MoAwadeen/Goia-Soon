@@ -5,7 +5,7 @@ import { Logo } from '@/components/icons/Logo';
 
 const placeholderImages = {
   background: 'https://placehold.co/1920x1080.png',
-  rotatingGraphic: 'https://placehold.co/200x200.png',
+  rotatingGraphic: 'https://drive.google.com/uc?export=view&id=14VEQNyBBZJNPzPnTIFbDLJBjSrTZsSHf',
 };
 
 export default function WaitlistPage() {
