@@ -24,7 +24,7 @@ export default function WaitlistPage() {
       </div>
       <div className="space-y-4">
         <h1 className="animate-in fade-in zoom-in-95 duration-500 text-4xl font-bold tracking-tighter text-primary drop-shadow-lg sm:text-5xl md:text-6xl">
-                  Your Virtual Guide in Your Pocket
+                  Your Virtual Guide in Your Pocket \n
                   Wait for us, coming soon
         </h1>
       </div>
