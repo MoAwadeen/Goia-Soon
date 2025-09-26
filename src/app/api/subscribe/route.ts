@@ -52,10 +52,12 @@ async function addToSupabase(email: string) {
       // Fallback: just log the email for now
       console.log('📧 New email subscription (Supabase not configured):', email);
       console.log('📅 Timestamp:', new Date().toISOString());
-      console.log('💡 To enable database storage, configure Supabase environment variables');
+      console.log('💡 To enable database storage, create .env.local with your Supabase credentials');
       return { success: true };
     }
 
+    console.log('🔍 Checking for existing email in database...');
+    
     // Check if email already exists
     const { data: existingEmails, error: checkError } = await supabaseAdmin
       .from('early_adopters')
@@ -65,13 +67,17 @@ async function addToSupabase(email: string) {
 
     if (checkError && checkError.code !== 'PGRST116') {
       // PGRST116 is "not found" error, which is expected for new emails
+      console.error('❌ Database check error:', checkError);
       throw new Error(`Database check error: ${checkError.message}`);
     }
 
     if (existingEmails) {
+      console.log('⚠️ Email already exists in database');
       return { success: false, error: 'Email already subscribed' };
     }
 
+    console.log('💾 Inserting new email into database...');
+    
     // Insert new email subscription
     const { data, error } = await supabaseAdmin
       .from('early_adopters')
@@ -85,13 +91,14 @@ async function addToSupabase(email: string) {
       .select();
 
     if (error) {
+      console.error('❌ Database insert error:', error);
       throw new Error(`Database insert error: ${error.message}`);
     }
 
     console.log('✅ New email subscription added to database:', data);
     return { success: true };
   } catch (error) {
-    console.error('Supabase integration error:', error);
+    console.error('❌ Supabase integration error:', error);
     return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }

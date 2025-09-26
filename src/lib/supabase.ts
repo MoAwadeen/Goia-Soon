@@ -1,51 +1,43 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Check if Supabase is properly configured
-const isSupabaseConfigured = () => {
-  return process.env.NEXT_PUBLIC_SUPABASE_URL && 
-         process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
-         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY &&
-         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY !== 'placeholder-key' &&
-         process.env.SUPABASE_SERVICE_ROLE_KEY &&
-         process.env.SUPABASE_SERVICE_ROLE_KEY !== 'placeholder-service-key';
-};
-
-// Only create clients if Supabase is properly configured
-export const supabase = (() => {
-  if (!isSupabaseConfigured()) {
+// Simple function to create Supabase client safely
+function createSupabaseClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  if (!url || !anonKey) {
     return null;
   }
   
   try {
-    return createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    return createClient(url, anonKey);
   } catch (error) {
     console.warn('Failed to create Supabase client:', error);
     return null;
   }
-})();
+}
 
-// Server-side client for API routes
-export const supabaseAdmin = (() => {
-  if (!isSupabaseConfigured()) {
+function createSupabaseAdminClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!url || !serviceKey) {
     return null;
   }
   
   try {
-    return createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false
-        }
+    return createClient(url, serviceKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
       }
-    );
+    });
   } catch (error) {
     console.warn('Failed to create Supabase admin client:', error);
     return null;
   }
-})();
+}
+
+// Export clients
+export const supabase = createSupabaseClient();
+export const supabaseAdmin = createSupabaseAdminClient();
