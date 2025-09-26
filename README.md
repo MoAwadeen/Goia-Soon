@@ -43,7 +43,13 @@ A modern, responsive landing page for Goia's upcoming US launch.
 
 ## 🔧 Environment Variables
 
-No environment variables are required for basic functionality.
+For basic functionality, no environment variables are required. However, to enable email collection with Supabase database integration, you'll need to set up:
+
+- `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anonymous key
+- `SUPABASE_SERVICE_ROLE_KEY` - Your Supabase service role key
+
+See [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) for detailed setup instructions.
 
 ## 🎯 Features
 
@@ -52,6 +58,8 @@ No environment variables are required for basic functionality.
 - ✅ Custom Goia branding
 - ✅ Social media integration
 - ✅ Gmail integration
+- ✅ Email signup for early adopters
+- ✅ Supabase database integration
 - ✅ Optimized for performance
 
 ## 📁 Project Structure
