@@ -5,6 +5,10 @@ import type { Job } from '@/lib/types/database'
 
 async function getJobs(): Promise<Job[]> {
   const supabase = createClient()
+  if (!supabase) {
+    console.warn('Supabase client unavailable. Returning empty jobs list.')
+    return []
+  }
   const { data, error } = await supabase
     .from('jobs')
     .select('*')

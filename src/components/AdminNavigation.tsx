@@ -10,6 +10,10 @@ export default function AdminNavigation({ userEmail }: { userEmail: string }) {
   const router = useRouter()
 
   const signOut = async () => {
+    if (!supabase) {
+      console.warn('Supabase client unavailable. Sign out is disabled.')
+      return
+    }
     await supabase.auth.signOut()
     router.push('/admin/login')
     router.refresh()

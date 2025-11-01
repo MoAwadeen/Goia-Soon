@@ -4,6 +4,10 @@ import { Briefcase, User } from 'lucide-react'
 
 async function getApplications() {
   const supabase = createClient()
+  if (!supabase) {
+    console.warn('Supabase client unavailable. Returning empty applications list.')
+    return []
+  }
   const { data, error } = await supabase
     .from('job_applications')
     .select('*, jobs(title)')

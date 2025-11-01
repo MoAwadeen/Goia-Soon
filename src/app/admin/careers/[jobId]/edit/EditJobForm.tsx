@@ -42,6 +42,10 @@ export default function EditJobForm({ job }: { job: Job }) {
   })
 
   const onSubmit = async (values: FormValues) => {
+    if (!supabase) {
+      alert('Supabase environment variables are missing. Unable to update job.')
+      return
+    }
     const { error } = await supabase
       .from('jobs')
       .update({

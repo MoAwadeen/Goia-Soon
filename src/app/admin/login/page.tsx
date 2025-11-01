@@ -19,6 +19,12 @@ export default function AdminLoginPage() {
     setLoading(true)
     setError(null)
 
+    if (!supabase) {
+      setError('Supabase environment variables are missing. Contact an administrator to configure access.')
+      setLoading(false)
+      return
+    }
+
     try {
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,

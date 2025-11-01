@@ -6,6 +6,10 @@ import JobApplicationForm from '@/components/JobApplicationForm'
 
 async function getJob(jobId: string): Promise<Job | null> {
   const supabase = createClient()
+  if (!supabase) {
+    console.warn('Supabase client unavailable. Unable to fetch job details.')
+    return null
+  }
   const { data, error } = await supabase
     .from('jobs')
     .select('*')

@@ -7,6 +7,10 @@ import EditJobForm from './EditJobForm'
 
 async function getJob(jobId: string): Promise<Job | null> {
   const supabase = createClient()
+  if (!supabase) {
+    console.warn('Supabase client unavailable. Unable to load job for editing.')
+    return null
+  }
   const { data, error } = await supabase.from('jobs').select('*').eq('id', jobId).single()
 
   if (error) {

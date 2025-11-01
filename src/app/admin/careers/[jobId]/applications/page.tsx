@@ -6,6 +6,10 @@ import type { Job, JobApplication } from '@/lib/types/database'
 
 async function getData(jobId: string) {
   const supabase = createClient()
+  if (!supabase) {
+    console.warn('Supabase client unavailable. Unable to load job applications.')
+    return null
+  }
   const { data: job, error: jobError } = await supabase.from('jobs').select('*').eq('id', jobId).single()
 
   if (jobError || !job) {

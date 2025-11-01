@@ -33,6 +33,10 @@ export default function NewJobPage() {
   })
 
   const onSubmit = async (values: FormValues) => {
+    if (!supabase) {
+      alert('Supabase environment variables are missing. Unable to create job.')
+      return
+    }
     const { error } = await supabase.from('jobs').insert(values)
 
     if (error) {

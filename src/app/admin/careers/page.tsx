@@ -4,6 +4,10 @@ import { MapPin, Briefcase, ToggleRight, ToggleLeft, Plus, Eye, Edit3 } from 'lu
 
 async function getJobs() {
   const supabase = createClient()
+  if (!supabase) {
+    console.warn('Supabase client unavailable. Returning empty admin jobs list.')
+    return []
+  }
   const { data, error } = await supabase
     .from('jobs')
     .select('*, job_applications(count)')
