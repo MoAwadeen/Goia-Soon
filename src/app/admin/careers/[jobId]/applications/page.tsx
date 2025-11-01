@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { ArrowLeft, User, Clock, Mail, Phone, Linkedin, Eye, FileText } from 'lucide-react'
+import { ArrowLeft, User, Clock, Mail, Phone, Linkedin, Download, FileText } from 'lucide-react'
 import type { Job, JobApplication } from '@/lib/types/database'
+import ApplicationStatusUpdater from '@/components/ApplicationStatusUpdater'
 
 async function getData(jobId: string) {
   const supabase = await createClient()
@@ -55,7 +56,7 @@ export default async function JobApplicationsPage({ params }: { params: Promise<
           </div>
         </div>
         <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
-          <FileText className="w-4 h-4" /> Review each application carefully before updating statuses in Supabase.
+          <FileText className="w-4 h-4" /> Review applications and update their status
         </div>
       </div>
 
@@ -63,7 +64,7 @@ export default async function JobApplicationsPage({ params }: { params: Promise<
         <div className="grid gap-6">
           {applications.map((application) => (
             <div key={application.id} className="rounded-3xl border border-primary/10 bg-white/90 shadow-lg backdrop-blur-sm p-6">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div className="flex items-center gap-3">
                   <div className="rounded-2xl bg-primary/10 text-primary p-3">
                     <User className="w-5 h-5" />
@@ -76,15 +77,21 @@ export default async function JobApplicationsPage({ params }: { params: Promise<
                     </div>
                   </div>
                 </div>
-                {application.resume_url && (
-                  <Link
-                    href={`/admin/resume?path=${encodeURIComponent(application.resume_url)}`}
-                    className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:bg-primary/90"
-                    target="_blank"
-                  >
-                    <Eye className="w-4 h-4" /> View resume
-                  </Link>
-                )}
+                <div className="flex flex-col gap-3 items-end">
+                  <ApplicationStatusUpdater 
+                    applicationId={application.id} 
+                    currentStatus={application.status} 
+                  />
+                  {application.resume_url && (
+                    <a
+                      href={application.resume_url}
+                      download
+                      className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:bg-primary/90"
+                    >
+                      <Download className="w-4 h-4" /> Download resume
+                    </a>
+                  )}
+                </div>
               </div>
 
               <div className="mt-6 grid gap-6 md:grid-cols-2">

@@ -4,6 +4,13 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, Eye, EyeOff } from 'lucide-react'
+import Image from 'next/image'
+
+const placeholderImages = {
+  background: 'https://drive.google.com/uc?export=view&id=1jeixPZMYCompO1rUxvQEXs26E_uYIsnD',
+  rotatingGraphic: 'https://drive.google.com/uc?export=view&id=14VEQNyBBZJNPzPnTIFbDLJBjSrTZsSHf',
+  logo: 'https://drive.google.com/uc?export=view&id=1CpgY00g6FnFXzUg78cWSMVtZYbzsp3qp',
+}
 
 export default function AdminLoginPage() {
   const supabase = createClient()
@@ -53,60 +60,96 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <form onSubmit={submit} className="bg-white w-full max-w-md rounded-xl p-6 shadow">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Admin Sign In</h1>
-        <p className="text-sm text-gray-600 mb-6">Access the Goia careers admin panel</p>
+    <div className="relative flex min-h-[100dvh] flex-col items-center justify-center p-4 text-center overflow-hidden">
+      <Image
+        src={placeholderImages.background}
+        alt="Background"
+        fill
+        style={{ objectFit: 'cover' }}
+        className="-z-10"
+        data-ai-hint="abstract background"
+      />
+      <div className="absolute top-8 left-1/2 -translate-x-1/2">
+        <Image src={placeholderImages.logo} width="128" height="128" alt="Logo" data-ai-hint="company logo" />
+      </div>
+      
+      <form 
+        onSubmit={submit} 
+        className="animate-in fade-in zoom-in-95 duration-500 bg-white/95 backdrop-blur-sm w-full max-w-md rounded-3xl p-8 shadow-2xl border border-primary/10"
+      >
+        <h1 className="text-3xl font-bold text-primary mb-2">Admin Sign In</h1>
+        <p className="text-sm text-muted-foreground mb-8">Access the Goia careers admin panel</p>
 
-        <label className="block text-sm font-medium mb-1" htmlFor="email">
-          Email
-        </label>
-        <input
-          id="email"
-          className="w-full border border-gray-300 rounded-md px-3 py-2 mb-4"
-          type="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          required
-        />
+        <div className="space-y-5 text-left">
+          <div>
+            <label className="block text-sm font-medium text-foreground/80 mb-2" htmlFor="email">
+              Email
+            </label>
+            <input
+              id="email"
+              className="w-full rounded-2xl border border-primary/20 bg-white/90 px-4 py-2.5 text-sm shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="admin@goia.app"
+              required
+            />
+          </div>
 
-        <label className="block text-sm font-medium mb-1" htmlFor="password">
-          Password
-        </label>
-        <div className="relative mb-4">
-          <input
-            id="password"
-            className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10"
-            type={showPassword ? 'text' : 'password'}
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-          />
+          <div>
+            <label className="block text-sm font-medium text-foreground/80 mb-2" htmlFor="password">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                id="password"
+                className="w-full rounded-2xl border border-primary/20 bg-white/90 px-4 py-2.5 pr-12 text-sm shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="••••••••"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((value) => !value)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition"
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+
+          {error && (
+            <div className="rounded-2xl bg-destructive/10 border border-destructive/20 px-4 py-3 text-sm text-destructive">
+              {error}
+            </div>
+          )}
+
           <button
-            type="button"
-            onClick={() => setShowPassword((value) => !value)}
-            className="absolute right-2 top-2.5 text-gray-500"
+            type="submit"
+            disabled={loading}
+            className="w-full rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-lg transition hover:bg-primary/90 disabled:opacity-50 flex items-center justify-center"
           >
-            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Signing in...
+              </>
+            ) : (
+              'Sign in'
+            )}
           </button>
         </div>
-
-        {error && <div className="text-sm text-red-600 mb-3">{error}</div>}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white rounded-md py-2 font-medium hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Signing in...
-            </>
-          ) : (
-            'Sign in'
-          )}
-        </button>
       </form>
+
+      <Image
+        src={placeholderImages.rotatingGraphic}
+        width="200"
+        height="200"
+        alt="Rotating graphic"
+        data-ai-hint="geometric shape"
+        className="absolute -bottom-20 -right-20 animate-spin-slow"
+      />
     </div>
   )
 }
