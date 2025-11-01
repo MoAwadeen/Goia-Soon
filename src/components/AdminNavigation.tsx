@@ -20,29 +20,35 @@ export default function AdminNavigation({ userEmail }: { userEmail: string }) {
   }
 
   return (
-    <nav className="bg-white border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/admin/careers" className="text-xl font-semibold text-gray-900">
+    <nav className="border-b border-primary/10 bg-white/80 backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 lg:px-0">
+        <Link href="/admin/careers" className="text-lg font-semibold text-primary">
           Goia Admin
         </Link>
-        <div className="flex items-center gap-6">
-          <Link href="/admin/careers" className="inline-flex items-center text-gray-700 hover:text-blue-600">
-            <Briefcase className="w-4 h-4 mr-2" />
-            Jobs
+        <div className="flex items-center gap-4">
+          <Link
+            href="/admin/careers"
+            className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium text-primary transition hover:bg-primary/10"
+          >
+            <Briefcase className="w-4 h-4" /> Jobs
           </Link>
-          <Link href="/admin/applications" className="inline-flex items-center text-gray-700 hover:text-blue-600">
-            <Users className="w-4 h-4 mr-2" />
-            Applications
+          <Link
+            href="/admin/applications"
+            className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium text-primary transition hover:bg-primary/10"
+          >
+            <Users className="w-4 h-4" /> Applications
           </Link>
-          <div className="text-sm text-gray-600">{userEmail}</div>
-          <button onClick={signOut} className="inline-flex items-center text-gray-700 hover:text-red-600">
-            <LogOut className="w-4 h-4 mr-2" />
-            Sign out
+          <div className="hidden text-xs font-medium uppercase tracking-wide text-muted-foreground sm:block">
+            {userEmail}
+          </div>
+          <button
+            onClick={signOut}
+            className="inline-flex items-center gap-2 rounded-full border border-primary/20 px-3 py-1.5 text-sm font-medium text-primary transition hover:border-primary hover:bg-primary/5"
+          >
+            <LogOut className="w-4 h-4" /> Sign out
           </button>
         </div>
       </div>
     </nav>
   )
 }
-
-

@@ -34,39 +34,41 @@ export default async function JobDetailsPage({ params }: { params: Promise<{ job
   }
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">{job.title}</h1>
-        <div className="mt-3 flex flex-wrap items-center gap-4 text-gray-600">
-          {job.location && (
-            <span className="inline-flex items-center">
-              <MapPin className="w-5 h-5 mr-2" />
-              {job.location}
+    <div className="space-y-8">
+      <header className="rounded-3xl border border-primary/10 bg-white/90 px-6 py-10 shadow-lg backdrop-blur-sm">
+        <div className="space-y-4">
+          <h1 className="text-4xl font-semibold text-foreground">{job.title}</h1>
+          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+            {job.location && (
+              <span className="inline-flex items-center gap-2">
+                <MapPin className="w-4 h-4" />
+                {job.location}
+              </span>
+            )}
+            <span className="inline-flex items-center gap-2">
+              <Briefcase className="w-4 h-4" />
+              {job.type}
             </span>
-          )}
-          <span className="inline-flex items-center">
-            <Briefcase className="w-5 h-5 mr-2" />
-            {job.type}
-          </span>
-          {job.salary_range && (
-            <span className="inline-flex items-center">
-              <DollarSign className="w-5 h-5 mr-2" />
-              {job.salary_range}
+            {job.salary_range && (
+              <span className="inline-flex items-center gap-2">
+                <DollarSign className="w-4 h-4" />
+                {job.salary_range}
+              </span>
+            )}
+            <span className="inline-flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              Posted {new Date(job.created_at).toLocaleDateString()}
             </span>
-          )}
-          <span className="inline-flex items-center">
-            <Calendar className="w-5 h-5 mr-2" />
-            Posted {new Date(job.created_at).toLocaleDateString()}
-          </span>
+          </div>
         </div>
-      </div>
+      </header>
 
-      <div className="grid lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-8">
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        <div className="space-y-8">
           {job.description && (
-            <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-3">Job Description</h2>
-              <div className="prose max-w-none">
+            <section className="rounded-3xl border border-primary/10 bg-white/90 p-6 shadow-sm backdrop-blur-sm">
+              <h2 className="text-xl font-semibold text-foreground mb-3">Job description</h2>
+              <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
                 {job.description.split('\n').map((paragraph, index) => (
                   <p key={index}>{paragraph}</p>
                 ))}
@@ -75,9 +77,9 @@ export default async function JobDetailsPage({ params }: { params: Promise<{ job
           )}
 
           {job.requirements && (
-            <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-3">Requirements</h2>
-              <div className="prose max-w-none">
+            <section className="rounded-3xl border border-primary/10 bg-white/90 p-6 shadow-sm backdrop-blur-sm">
+              <h2 className="text-xl font-semibold text-foreground mb-3">Requirements</h2>
+              <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
                 {job.requirements.split('\n').map((requirement, index) => (
                   <p key={index}>{requirement}</p>
                 ))}
@@ -86,9 +88,9 @@ export default async function JobDetailsPage({ params }: { params: Promise<{ job
           )}
         </div>
 
-        <aside className="lg:col-span-1">
-          <div className="bg-gray-50 rounded-xl p-6 sticky top-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Apply for this position</h3>
+        <aside className="lg:sticky lg:top-8">
+          <div className="rounded-3xl border border-primary/10 bg-white/95 p-6 shadow-lg backdrop-blur-sm">
+            <h3 className="text-lg font-semibold text-foreground mb-4">Apply for this position</h3>
             <JobApplicationForm jobId={job.id} />
           </div>
         </aside>
@@ -96,5 +98,3 @@ export default async function JobDetailsPage({ params }: { params: Promise<{ job
     </div>
   )
 }
-
-

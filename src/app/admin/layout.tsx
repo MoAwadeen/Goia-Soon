@@ -7,15 +7,12 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   const supabase = await createClient()
   if (!supabase) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="max-w-lg rounded-xl border border-gray-200 bg-white p-6 shadow-sm text-center space-y-4">
-          <h1 className="text-2xl font-semibold text-gray-900">Supabase Not Configured</h1>
-          <p className="text-sm text-gray-600">
-            Set <code className="rounded bg-gray-100 px-1 py-0.5">NEXT_PUBLIC_SUPABASE_URL</code> and
-            <code className="rounded bg-gray-100 px-1 py-0.5">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> in your <code>.env.local</code> file, then restart the dev server.
-          </p>
-          <p className="text-xs text-gray-500">
-            Visit Supabase dashboard → Settings → API to copy the values. The admin dashboard will activate once the environment variables are provided.
+      <div className="min-h-screen bg-gradient-to-br from-white via-primary/10 to-primary/5 flex items-center justify-center px-4">
+        <div className="max-w-lg rounded-2xl border border-primary/10 bg-white/90 p-8 shadow-lg space-y-4 text-center">
+          <h1 className="text-2xl font-semibold text-primary">Supabase not configured</h1>
+          <p className="text-sm text-muted-foreground">
+            Set <code className="rounded bg-primary/10 px-1 py-0.5 text-primary">NEXT_PUBLIC_SUPABASE_URL</code> and
+            <code className="rounded bg-primary/10 px-1 py-0.5 text-primary">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> in your <code>.env.local</code> file, then restart the dev server.
           </p>
         </div>
       </div>
@@ -41,10 +38,11 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-white via-primary/10 to-primary/5">
       <AdminNavigation userEmail={session.user.email!} />
-      <main className="max-w-7xl mx-auto px-4 py-6">{children}</main>
+      <main className="mx-auto w-full max-w-6xl px-4 py-8 lg:px-0">
+        {children}
+      </main>
     </div>
   )
 }
-

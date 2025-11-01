@@ -30,19 +30,19 @@ export default async function EditJobPage({ params }: { params: Promise<{ jobId:
   }
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="mb-6">
-        <Link href="/admin/careers" className="inline-flex items-center text-blue-600 hover:text-blue-800">
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Jobs
+    <div className="max-w-4xl mx-auto space-y-6">
+      <div className="space-y-2">
+        <Link href="/admin/careers" className="inline-flex items-center gap-2 text-primary hover:text-primary/80">
+          <ArrowLeft className="w-4 h-4" />
+          Back to jobs
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900 mt-3">Edit Job</h1>
-        <p className="text-gray-600">Update job details and publish status</p>
+        <div>
+          <h1 className="text-3xl font-semibold text-foreground">Edit job</h1>
+          <p className="text-sm text-muted-foreground">Update job details and publishing status.</p>
+        </div>
       </div>
 
       <EditJobForm job={job} />
     </div>
   )
 }
-
-

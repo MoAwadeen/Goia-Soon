@@ -11,11 +11,7 @@ const formSchema = z.object({
   fullName: z.string().min(2, 'Full name is required'),
   email: z.string().email('Valid email required'),
   phone: z.string().optional(),
-  linkedinUrl: z
-    .string()
-    .url('Enter a valid URL')
-    .optional()
-    .or(z.literal('')),
+  linkedinUrl: z.string().url('Enter a valid URL').optional().or(z.literal('')),
   coverLetter: z.string().min(10, 'Please add a brief cover letter'),
   resume: z
     .instanceof(FileList)
@@ -89,85 +85,87 @@ export default function JobApplicationForm({ jobId }: { jobId: string }) {
 
   if (state === 'success') {
     return (
-      <div className="text-center py-6">
-        <CheckCircle className="w-10 h-10 text-green-500 mx-auto mb-2" />
-        <p className="text-gray-800 font-medium">Application submitted!</p>
-        <p className="text-sm text-gray-600">We will review and get back to you.</p>
+      <div className="rounded-3xl border border-primary/20 bg-primary/5 px-6 py-8 text-center">
+        <CheckCircle className="w-10 h-10 text-primary mx-auto mb-3" />
+        <p className="text-lg font-semibold text-foreground">Application submitted!</p>
+        <p className="text-sm text-muted-foreground">Thank you for applying. Our team will be in touch soon.</p>
       </div>
     )
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium mb-1">Full Name *</label>
-        <input
-          {...register('fullName')}
-          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
-          placeholder="John Doe"
-        />
-        {errors.fullName && <p className="text-xs text-red-600 mt-1">{errors.fullName.message}</p>}
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium mb-1">Email *</label>
-        <input
-          {...register('email')}
-          type="email"
-          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
-          placeholder="john@example.com"
-        />
-        {errors.email && <p className="text-xs text-red-600 mt-1">{errors.email.message}</p>}
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium mb-1">Phone</label>
-        <input
-          {...register('phone')}
-          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
-          placeholder="+20 ..."
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium mb-1">LinkedIn</label>
-        <input
-          {...register('linkedinUrl')}
-          type="url"
-          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
-          placeholder="https://linkedin.com/in/..."
-        />
-        {errors.linkedinUrl && <p className="text-xs text-red-600 mt-1">{errors.linkedinUrl.message}</p>}
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium mb-1">Resume (PDF/DOC, max 5MB) *</label>
-        <div className="relative">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <div className="grid gap-4">
+        <div>
+          <label className="block text-sm font-medium text-foreground/80 mb-2">Full name *</label>
           <input
-            {...register('resume')}
-            type="file"
-            accept=".pdf,.doc,.docx"
-            className="w-full border border-gray-300 rounded-md px-3 py-2 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:bg-blue-50 file:text-blue-700"
+            {...register('fullName')}
+            className="w-full rounded-2xl border border-primary/20 bg-white/90 px-4 py-2.5 text-sm shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+            placeholder="Alex Morgan"
           />
-          <Upload className="w-4 h-4 text-gray-400 absolute right-3 top-3" />
+          {errors.fullName && <p className="text-xs text-destructive mt-1">{errors.fullName.message}</p>}
         </div>
-        {errors.resume && <p className="text-xs text-red-600 mt-1">{errors.resume.message}</p>}
-      </div>
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Cover Letter *</label>
-        <textarea
-          {...register('coverLetter')}
-          rows={4}
-          className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
-          placeholder="Tell us why you'd be a great fit..."
-        />
-        {errors.coverLetter && <p className="text-xs text-red-600 mt-1">{errors.coverLetter.message}</p>}
+        <div>
+          <label className="block text-sm font-medium text-foreground/80 mb-2">Email *</label>
+          <input
+            {...register('email')}
+            type="email"
+            className="w-full rounded-2xl border border-primary/20 bg-white/90 px-4 py-2.5 text-sm shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+            placeholder="you@example.com"
+          />
+          {errors.email && <p className="text-xs text-destructive mt-1">{errors.email.message}</p>}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-foreground/80 mb-2">Phone</label>
+          <input
+            {...register('phone')}
+            className="w-full rounded-2xl border border-primary/20 bg-white/90 px-4 py-2.5 text-sm shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+            placeholder="+20 ..."
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-foreground/80 mb-2">LinkedIn</label>
+          <input
+            {...register('linkedinUrl')}
+            type="url"
+            className="w-full rounded-2xl border border-primary/20 bg-white/90 px-4 py-2.5 text-sm shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+            placeholder="https://linkedin.com/in/..."
+          />
+          {errors.linkedinUrl && <p className="text-xs text-destructive mt-1">{errors.linkedinUrl.message}</p>}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-foreground/80 mb-2">Resume (PDF/DOC, max 5MB) *</label>
+          <div className="relative">
+            <input
+              {...register('resume')}
+              type="file"
+              accept=".pdf,.doc,.docx"
+              className="w-full rounded-2xl border border-primary/20 bg-white/90 px-4 py-2.5 text-sm file:mr-3 file:rounded-full file:border-0 file:bg-primary/10 file:px-4 file:py-1.5 file:text-primary file:font-medium focus:border-primary focus:ring-2 focus:ring-primary/30"
+            />
+            <Upload className="w-4 h-4 text-primary absolute right-3 top-3.5" />
+          </div>
+          {errors.resume && <p className="text-xs text-destructive mt-1">{errors.resume.message}</p>}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-foreground/80 mb-2">Cover letter *</label>
+          <textarea
+            {...register('coverLetter')}
+            rows={4}
+            className="w-full rounded-2xl border border-primary/20 bg-white/90 px-4 py-2.5 text-sm shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+            placeholder="Tell us why you'd be a great fit..."
+          />
+          {errors.coverLetter && <p className="text-xs text-destructive mt-1">{errors.coverLetter.message}</p>}
+        </div>
       </div>
 
       {state === 'error' && (
-        <div className="flex items-center text-red-600 text-sm">
-          <AlertCircle className="w-4 h-4 mr-2" />
+        <div className="flex items-center gap-2 rounded-2xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-destructive">
+          <AlertCircle className="w-4 h-4" />
           Failed to submit. Please try again.
         </div>
       )}
@@ -175,19 +173,17 @@ export default function JobApplicationForm({ jobId }: { jobId: string }) {
       <button
         type="submit"
         disabled={submitting}
-        className="w-full bg-blue-600 text-white rounded-md py-2 font-medium hover:bg-blue-700 disabled:opacity-50 flex justify-center items-center"
+        className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70"
       >
         {submitting ? (
           <>
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            <Loader2 className="w-4 h-4 animate-spin" />
             Submitting...
           </>
         ) : (
-          'Submit Application'
+          'Submit application'
         )}
       </button>
     </form>
   )
 }
-
-
