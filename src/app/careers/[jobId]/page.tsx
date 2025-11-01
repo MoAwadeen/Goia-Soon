@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import type { Job } from '@/lib/types/database'
-import { MapPin, Briefcase, DollarSign, Calendar } from 'lucide-react'
+import { MapPin, Briefcase, DollarSign, Calendar, ArrowLeft } from 'lucide-react'
 import JobApplicationForm from '@/components/JobApplicationForm'
 
 async function getJob(jobId: string): Promise<Job | null> {
@@ -34,28 +35,36 @@ export default async function JobDetailsPage({ params }: { params: Promise<{ job
   }
 
   return (
-    <div className="space-y-8">
-      <header className="rounded-3xl border border-primary/10 bg-white/90 px-6 py-10 shadow-lg backdrop-blur-sm">
-        <div className="space-y-4">
-          <h1 className="text-4xl font-semibold text-foreground">{job.title}</h1>
+    <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
+      <Link
+        href="/careers"
+        className="inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-sm font-medium text-primary shadow-lg backdrop-blur-sm transition hover:bg-white"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Back to all jobs
+      </Link>
+
+      <header className="rounded-3xl border border-primary/10 bg-white/95 px-8 py-12 shadow-2xl backdrop-blur-sm">
+        <div className="space-y-5">
+          <h1 className="text-4xl font-bold text-primary drop-shadow-sm md:text-5xl">{job.title}</h1>
           <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
             {job.location && (
-              <span className="inline-flex items-center gap-2">
+              <span className="inline-flex items-center gap-2 rounded-full bg-primary/5 px-3 py-1.5">
                 <MapPin className="w-4 h-4" />
                 {job.location}
               </span>
             )}
-            <span className="inline-flex items-center gap-2">
+            <span className="inline-flex items-center gap-2 rounded-full bg-primary/5 px-3 py-1.5">
               <Briefcase className="w-4 h-4" />
               {job.type}
             </span>
             {job.salary_range && (
-              <span className="inline-flex items-center gap-2">
+              <span className="inline-flex items-center gap-2 rounded-full bg-primary/5 px-3 py-1.5">
                 <DollarSign className="w-4 h-4" />
                 {job.salary_range}
               </span>
             )}
-            <span className="inline-flex items-center gap-2">
+            <span className="inline-flex items-center gap-2 rounded-full bg-primary/5 px-3 py-1.5">
               <Calendar className="w-4 h-4" />
               Posted {new Date(job.created_at).toLocaleDateString()}
             </span>
@@ -64,11 +73,11 @@ export default async function JobDetailsPage({ params }: { params: Promise<{ job
       </header>
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-        <div className="space-y-8">
+        <div className="space-y-6">
           {job.description && (
-            <section className="rounded-3xl border border-primary/10 bg-white/90 p-6 shadow-sm backdrop-blur-sm">
-              <h2 className="text-xl font-semibold text-foreground mb-3">Job description</h2>
-              <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
+            <section className="rounded-3xl border border-primary/10 bg-white/95 p-8 shadow-lg backdrop-blur-sm">
+              <h2 className="text-2xl font-bold text-primary mb-4">Job description</h2>
+              <div className="space-y-4 text-sm leading-relaxed text-foreground/80">
                 {job.description.split('\n').map((paragraph, index) => (
                   <p key={index}>{paragraph}</p>
                 ))}
@@ -77,9 +86,9 @@ export default async function JobDetailsPage({ params }: { params: Promise<{ job
           )}
 
           {job.requirements && (
-            <section className="rounded-3xl border border-primary/10 bg-white/90 p-6 shadow-sm backdrop-blur-sm">
-              <h2 className="text-xl font-semibold text-foreground mb-3">Requirements</h2>
-              <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
+            <section className="rounded-3xl border border-primary/10 bg-white/95 p-8 shadow-lg backdrop-blur-sm">
+              <h2 className="text-2xl font-bold text-primary mb-4">Requirements</h2>
+              <div className="space-y-4 text-sm leading-relaxed text-foreground/80">
                 {job.requirements.split('\n').map((requirement, index) => (
                   <p key={index}>{requirement}</p>
                 ))}
@@ -88,9 +97,9 @@ export default async function JobDetailsPage({ params }: { params: Promise<{ job
           )}
         </div>
 
-        <aside className="lg:sticky lg:top-8">
-          <div className="rounded-3xl border border-primary/10 bg-white/95 p-6 shadow-lg backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Apply for this position</h3>
+        <aside className="lg:sticky lg:top-8 lg:self-start">
+          <div className="rounded-3xl border border-primary/10 bg-white/95 p-7 shadow-2xl backdrop-blur-sm">
+            <h3 className="text-xl font-bold text-primary mb-5">Apply for this position</h3>
             <JobApplicationForm jobId={job.id} />
           </div>
         </aside>
