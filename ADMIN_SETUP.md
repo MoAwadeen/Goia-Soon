@@ -57,7 +57,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 npm run dev
 ```
 
-3. Navigate to: `http://localhost:9002/admin/login`
+3. Navigate to: `http://localhost:9002/login`
 4. Sign in with the email and password you created in Step 3
 
 ## Step 5: Create Your First Job Posting

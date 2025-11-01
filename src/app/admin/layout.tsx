@@ -1,22 +1,11 @@
 import { ReactNode } from 'react'
 import { redirect } from 'next/navigation'
-import { headers } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import AdminNavigation from '@/components/AdminNavigation'
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
-  const headersList = await headers()
-  const pathname = headersList.get('x-pathname') || headersList.get('x-invoke-path') || ''
-  
-  // Allow access to login and unauthorized pages without auth
-  const publicRoutes = ['/admin/login', '/admin/unauthorized']
-  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route))
-
   const supabase = await createClient()
   if (!supabase) {
-    if (isPublicRoute) {
-      return <>{children}</>
-    }
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="max-w-lg rounded-xl border border-gray-200 bg-white p-6 shadow-sm text-center space-y-4">
@@ -33,17 +22,12 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     )
   }
 
-  // For public routes, just render children
-  if (isPublicRoute) {
-    return <>{children}</>
-  }
-
   const {
     data: { session },
   } = await supabase.auth.getSession()
 
   if (!session) {
-    redirect('/admin/login')
+    redirect('/login')
   }
 
   const { data: admin } = await supabase
@@ -53,7 +37,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     .single()
 
   if (!admin) {
-    redirect('/admin/unauthorized')
+    redirect('/unauthorized')
   }
 
   return (
@@ -63,5 +47,4 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     </div>
   )
 }
-
 
