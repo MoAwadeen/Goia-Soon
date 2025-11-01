@@ -16,6 +16,9 @@ export function Header() {
           <Link href="#screenshots" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
             Screenshots
           </Link>
+          <Link href="/careers" className="text-sm font-medium hover:underline underline-offset-4">
+            Careers
+          </Link>
         </nav>
       </div>
     </header>
