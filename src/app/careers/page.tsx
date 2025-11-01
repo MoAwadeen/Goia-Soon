@@ -4,7 +4,7 @@ import { MapPin, Briefcase, BriefcaseBusiness } from 'lucide-react'
 import type { Job } from '@/lib/types/database'
 
 async function getJobs(): Promise<Job[]> {
-  const supabase = createClient()
+  const supabase = await createClient()
   if (!supabase) {
     console.warn('Supabase client unavailable. Returning empty jobs list.')
     return []

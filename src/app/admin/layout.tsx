@@ -1,24 +1,10 @@
 import { ReactNode } from 'react'
-import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import AdminNavigation from '@/components/AdminNavigation'
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
-  const headerList = headers()
-  const currentPath =
-    headerList.get('x-invoke-path') ??
-    headerList.get('x-matched-path') ??
-    headerList.get('x-current-pathname') ??
-    ''
-
-  const publicRoutes = ['/admin/login', '/admin/unauthorized']
-
-  if (publicRoutes.includes(currentPath)) {
-    return <>{children}</>
-  }
-
-  const supabase = createClient()
+  const supabase = await createClient()
   if (!supabase) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">

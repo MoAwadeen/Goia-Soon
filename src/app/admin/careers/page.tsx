@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { MapPin, Briefcase, ToggleRight, ToggleLeft, Plus, Eye, Edit3 } from 'lucide-react'
 
 async function getJobs() {
-  const supabase = createClient()
+  const supabase = await createClient()
   if (!supabase) {
     console.warn('Supabase client unavailable. Returning empty admin jobs list.')
     return []

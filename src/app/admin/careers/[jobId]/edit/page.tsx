@@ -6,7 +6,7 @@ import type { Job } from '@/lib/types/database'
 import EditJobForm from './EditJobForm'
 
 async function getJob(jobId: string): Promise<Job | null> {
-  const supabase = createClient()
+  const supabase = await createClient()
   if (!supabase) {
     console.warn('Supabase client unavailable. Unable to load job for editing.')
     return null

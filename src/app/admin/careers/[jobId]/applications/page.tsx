@@ -5,7 +5,7 @@ import { ArrowLeft, User, Clock, Mail, Phone, Linkedin, Download } from 'lucide-
 import type { Job, JobApplication } from '@/lib/types/database'
 
 async function getData(jobId: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
   if (!supabase) {
     console.warn('Supabase client unavailable. Unable to load job applications.')
     return null

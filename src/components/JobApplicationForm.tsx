@@ -62,8 +62,7 @@ export default function JobApplicationForm({ jobId }: { jobId: string }) {
       const { error: uploadError } = await supabase.storage.from('resumes').upload(path, file)
       if (uploadError) throw uploadError
 
-      const { data: publicUrlData, error: publicUrlError } = await supabase.storage.from('resumes').getPublicUrl(path)
-      if (publicUrlError) throw publicUrlError
+      const { data: publicUrlData } = supabase.storage.from('resumes').getPublicUrl(path)
 
       const resumeUrl = publicUrlData.publicUrl
 

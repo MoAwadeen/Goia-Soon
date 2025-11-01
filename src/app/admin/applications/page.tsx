@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Briefcase, User } from 'lucide-react'
 
 async function getApplications() {
-  const supabase = createClient()
+  const supabase = await createClient()
   if (!supabase) {
     console.warn('Supabase client unavailable. Returning empty applications list.')
     return []

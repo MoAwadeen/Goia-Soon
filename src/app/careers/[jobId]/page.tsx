@@ -5,7 +5,7 @@ import { MapPin, Briefcase, DollarSign, Calendar } from 'lucide-react'
 import JobApplicationForm from '@/components/JobApplicationForm'
 
 async function getJob(jobId: string): Promise<Job | null> {
-  const supabase = createClient()
+  const supabase = await createClient()
   if (!supabase) {
     console.warn('Supabase client unavailable. Unable to fetch job details.')
     return null
