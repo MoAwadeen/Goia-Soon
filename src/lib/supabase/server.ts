@@ -12,6 +12,14 @@ export const createClient = async () => {
     return null
   }
 
+  // Validate URL format
+  try {
+    new URL(url)
+  } catch (error) {
+    console.error('Invalid Supabase URL:', url)
+    return null
+  }
+
   const cookieStore = await cookies()
 
   return createServerClient(url, anonKey, {
