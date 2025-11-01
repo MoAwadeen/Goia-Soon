@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import type { PageProps } from 'next'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { ArrowLeft, User, Clock, Mail, Phone, Linkedin, Download } from 'lucide-react'
@@ -31,7 +30,7 @@ async function getData(jobId: string) {
   return { job, applications: applications || [] }
 }
 
-export default async function JobApplicationsPage({ params }: PageProps<{ jobId: string }>) {
+export default async function JobApplicationsPage({ params }: { params: Promise<{ jobId: string }> }) {
   const { jobId } = await params
   const result = await getData(jobId)
 

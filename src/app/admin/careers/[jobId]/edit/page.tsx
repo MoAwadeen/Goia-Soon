@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import type { PageProps } from 'next'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
@@ -22,7 +21,7 @@ async function getJob(jobId: string): Promise<Job | null> {
   return data
 }
 
-export default async function EditJobPage({ params }: PageProps<{ jobId: string }>) {
+export default async function EditJobPage({ params }: { params: Promise<{ jobId: string }> }) {
   const { jobId } = await params
   const job = await getJob(jobId)
 

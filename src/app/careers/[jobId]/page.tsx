@@ -1,4 +1,3 @@
-import type { PageProps } from 'next'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import type { Job } from '@/lib/types/database'
@@ -26,7 +25,7 @@ async function getJob(jobId: string): Promise<Job | null> {
   return data
 }
 
-export default async function JobDetailsPage({ params }: PageProps<{ jobId: string }>) {
+export default async function JobDetailsPage({ params }: { params: Promise<{ jobId: string }> }) {
   const { jobId } = await params
   const job = await getJob(jobId)
 
