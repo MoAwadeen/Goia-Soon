@@ -20,7 +20,20 @@ export default async function AdminLayout({ children }: { children: ReactNode })
 
   const supabase = createClient()
   if (!supabase) {
-    throw new Error('Supabase environment variables are not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.')
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="max-w-lg rounded-xl border border-gray-200 bg-white p-6 shadow-sm text-center space-y-4">
+          <h1 className="text-2xl font-semibold text-gray-900">Supabase Not Configured</h1>
+          <p className="text-sm text-gray-600">
+            Set <code className="rounded bg-gray-100 px-1 py-0.5">NEXT_PUBLIC_SUPABASE_URL</code> and
+            <code className="rounded bg-gray-100 px-1 py-0.5">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> in your <code>.env.local</code> file, then restart the dev server.
+          </p>
+          <p className="text-xs text-gray-500">
+            Visit Supabase dashboard → Settings → API to copy the values. The admin dashboard will activate once the environment variables are provided.
+          </p>
+        </div>
+      </div>
+    )
   }
   const {
     data: { session },
