@@ -78,7 +78,7 @@ export default async function JobApplicationsPage({ params }: { params: Promise<
                 </div>
                 {application.resume_url && (
                   <Link
-                    href={`/admin/resume?url=${encodeURIComponent(application.resume_url)}`}
+                    href={`/admin/resume?path=${encodeURIComponent(application.resume_url)}`}
                     className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:bg-primary/90"
                     target="_blank"
                   >

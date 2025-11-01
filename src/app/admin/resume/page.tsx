@@ -1,34 +1,51 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft, ExternalLink } from 'lucide-react'
+import { ArrowLeft, ExternalLink, FileWarning } from 'lucide-react'
+import { supabaseAdmin } from '@/lib/supabase'
+import { ResumePreview } from './ResumePreview'
 
 export default async function ResumeViewer({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const params = await searchParams
-  const encodedUrl = params.url
+  const encodedPath = params.path ?? params.url
 
-  if (!encodedUrl) {
+  if (!encodedPath) {
     notFound()
   }
 
-  let resumeUrl: string | null = null
+  let storagePath: string | null = null
   try {
-    resumeUrl = decodeURIComponent(encodedUrl)
-    const parsed = new URL(resumeUrl)
-    if (!['http:', 'https:'].includes(parsed.protocol)) {
-      throw new Error('Invalid protocol')
-    }
+    const decoded = decodeURIComponent(encodedPath)
+    storagePath = decoded.startsWith('http') ? decoded : decoded.replace(/^\/+/, '')
   } catch (error) {
-    console.error('Invalid resume URL provided', error)
-    resumeUrl = null
+    console.error('Failed to decode resume path', error)
+    storagePath = null
   }
 
-  if (!resumeUrl) {
+  let signedUrl: string | null = null
+
+  if (storagePath) {
+    if (storagePath.startsWith('http')) {
+      signedUrl = storagePath
+    } else if (supabaseAdmin) {
+      const { data, error } = await supabaseAdmin.storage.from('resumes').createSignedUrl(storagePath, 60 * 10)
+      if (error) {
+        console.error('Failed to create signed URL', error)
+      } else {
+        signedUrl = data?.signedUrl ?? null
+      }
+    }
+  }
+
+  if (!signedUrl) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white via-primary/10 to-primary/5 flex items-center justify-center px-6">
-        <div className="max-w-lg rounded-2xl bg-white/80 backdrop-blur border border-primary/10 shadow-lg p-8 text-center space-y-4">
-          <h1 className="text-2xl font-semibold text-primary">Resume unavailable</h1>
-          <p className="text-sm text-gray-600">The resume link is invalid or has expired. Ask the applicant to re-upload their resume.</p>
-          <Link href="/admin/applications" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium">
+      <div className="min-h-screen bg-primary/5 flex items-center justify-center px-6">
+        <div className="max-w-lg rounded-2xl border border-primary/10 bg-white p-8 text-center space-y-4 shadow-lg">
+          <FileWarning className="mx-auto h-10 w-10 text-primary" />
+          <h1 className="text-2xl font-semibold text-foreground">Resume unavailable</h1>
+          <p className="text-sm text-muted-foreground">
+            The resume link is invalid or has expired. Ask the applicant to re-upload their file or check your Supabase storage bucket configuration.
+          </p>
+          <Link href="/admin/applications" className="inline-flex items-center gap-2 text-primary font-medium">
             <ArrowLeft className="w-4 h-4" /> Back to applications
           </Link>
         </div>
@@ -37,14 +54,14 @@ export default async function ResumeViewer({ searchParams }: { searchParams: Pro
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-primary/10 to-primary/5">
-      <div className="max-w-6xl mx-auto py-6 px-4 lg:px-0">
+    <div className="min-h-screen bg-primary/5">
+      <div className="mx-auto w-full max-w-6xl px-4 py-6 lg:px-0">
         <div className="flex items-center justify-between mb-6">
-          <Link href="/admin/applications" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium">
+          <Link href="/admin/applications" className="inline-flex items-center gap-2 text-primary font-medium hover:text-primary/80">
             <ArrowLeft className="w-4 h-4" /> Back to applications
           </Link>
           <Link
-            href={resumeUrl}
+            href={signedUrl}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:bg-primary/90"
@@ -54,14 +71,7 @@ export default async function ResumeViewer({ searchParams }: { searchParams: Pro
           </Link>
         </div>
 
-        <div className="rounded-3xl border border-primary/10 bg-white/90 shadow-xl overflow-hidden min-h-[70vh]">
-          <iframe
-            src={resumeUrl}
-            title="Applicant resume"
-            className="w-full h-[calc(100vh-220px)]"
-            loading="lazy"
-          />
-        </div>
+        <ResumePreview url={signedUrl} />
       </div>
     </div>
   )

@@ -7,7 +7,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   const supabase = await createClient()
   if (!supabase) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white via-primary/10 to-primary/5 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-primary/5 flex items-center justify-center px-4">
         <div className="max-w-lg rounded-2xl border border-primary/10 bg-white/90 p-8 shadow-lg space-y-4 text-center">
           <h1 className="text-2xl font-semibold text-primary">Supabase not configured</h1>
           <p className="text-sm text-muted-foreground">
@@ -38,7 +38,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-primary/10 to-primary/5">
+    <div className="min-h-screen bg-primary/5">
       <AdminNavigation userEmail={session.user.email!} />
       <main className="mx-auto w-full max-w-6xl px-4 py-8 lg:px-0">
         {children}

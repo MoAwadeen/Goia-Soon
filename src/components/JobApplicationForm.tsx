@@ -58,10 +58,6 @@ export default function JobApplicationForm({ jobId }: { jobId: string }) {
       const { error: uploadError } = await supabase.storage.from('resumes').upload(path, file)
       if (uploadError) throw uploadError
 
-      const { data: publicUrlData } = supabase.storage.from('resumes').getPublicUrl(path)
-
-      const resumeUrl = publicUrlData.publicUrl
-
       const { error: insertError } = await supabase.from('job_applications').insert({
         job_id: jobId,
         full_name: values.fullName,
@@ -69,7 +65,7 @@ export default function JobApplicationForm({ jobId }: { jobId: string }) {
         phone: values.phone || null,
         linkedin_url: values.linkedinUrl || null,
         cover_letter: values.coverLetter,
-        resume_url: resumeUrl,
+        resume_url: path,
       })
       if (insertError) throw insertError
 
