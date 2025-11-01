@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Linkedin, Instagram, Mail, Facebook } from 'lucide-react';
 import Link from 'next/link';
+import { EmailSignup } from '@/components/landing/EmailSignup';
 
 const placeholderImages = {
   background: 'https://drive.google.com/uc?export=view&id=1jeixPZMYCompO1rUxvQEXs26E_uYIsnD',
@@ -14,18 +15,21 @@ export default function WaitlistPage() {
       <Image
         src={placeholderImages.background}
         alt="Background"
-        layout="fill"
-        objectFit="cover"
+        fill
+        style={{ objectFit: 'cover' }}
         className="-z-10"
         data-ai-hint="abstract background"
       />
       <div className="absolute top-8 left-1/2 -translate-x-1/2">
         <Image src={placeholderImages.logo} width="128" height="128" alt="Logo" data-ai-hint="company logo" />
       </div>
-      <div className="space-y-4">
+      <div className="space-y-8">
         <h1 className="animate-in fade-in zoom-in-95 duration-500 text-4xl font-bold tracking-tighter text-primary drop-shadow-lg sm:text-5xl md:text-6xl">
           Wait for us, coming soon
         </h1>
+        <div className="animate-in fade-in zoom-in-95 duration-700 delay-200">
+          <EmailSignup />
+        </div>
       </div>
       <Image
         src={placeholderImages.rotatingGraphic}
