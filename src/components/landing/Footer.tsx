@@ -9,7 +9,13 @@ export function Footer() {
             <Logo className="h-6 w-6 text-foreground" />
             <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Goia. All rights reserved.</p>
         </div>
-        <nav className="flex gap-4 sm:gap-6 text-sm">
+        <nav className="flex gap-4 sm:gap-6 text-sm items-center">
+          <Link
+            href="/careers"
+            className="inline-flex items-center rounded-full bg-primary px-3 py-1 font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+          >
+            Careers
+          </Link>
           <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>
             Terms of Service
           </Link>

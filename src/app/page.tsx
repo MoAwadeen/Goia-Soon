@@ -59,6 +59,12 @@ export default function WaitlistPage() {
             <span className="sr-only">Email</span>
           </Link>
         </div>
+        <Link
+          href="/careers"
+          className="inline-flex items-center rounded-full border border-primary px-4 py-2 text-sm font-medium text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
+        >
+          Careers
+        </Link>
       </div>
     </div>
   );
