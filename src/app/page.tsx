@@ -40,7 +40,6 @@ export default function WaitlistPage() {
         className="absolute -bottom-20 -right-20 animate-spin-slow"
       />
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center space-y-4">
-        <p className="text-primary font-semibold">Stay connected</p>
         <div className="flex items-center space-x-6">
           <Link href="https://www.linkedin.com/company/goiaapp/" target="_blank" prefetch={false}>
             <Linkedin className="h-6 w-6 text-primary hover:text-primary-foreground transition-colors" />
