@@ -33,10 +33,10 @@ export default async function CareersPage() {
           We&apos;re hiring
         </span>
         <h1 className="mt-6 text-4xl font-bold text-primary drop-shadow-sm md:text-5xl lg:text-6xl">
-          Join the team shaping immersive museum experiences
+          Join the team shaping the tourism future!
         </h1>
         <p className="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
-          We&apos;re building digital layers for the world&apos;s most inspiring spaces. Work with designers, artists, and technologists to bring culture to life in augmented reality.
+          We&apos;re building digital layers for the world&apos;s most inspiring spaces. Work with designers, artists, and technologists to bring history to life in one app.
         </p>
       </section>
 
