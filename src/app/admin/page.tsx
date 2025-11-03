@@ -97,7 +97,7 @@ export default async function AdminDashboard() {
         <h2 className="text-xl font-semibold text-foreground">Quick Actions</h2>
         <div className="grid gap-5 md:grid-cols-2">
           <Link
-            href="/admin/careers"
+            href="/admin/careers/jobs"
             className="group rounded-3xl border border-primary/10 bg-white/90 shadow-md backdrop-blur-sm p-6 transition hover:shadow-lg hover:border-primary/20"
           >
             <div className="flex items-center justify-between">
@@ -115,7 +115,7 @@ export default async function AdminDashboard() {
           </Link>
 
           <Link
-            href="/admin/applications"
+            href="/admin/careers/applications"
             className="group rounded-3xl border border-primary/10 bg-white/90 shadow-md backdrop-blur-sm p-6 transition hover:shadow-lg hover:border-primary/20"
           >
             <div className="flex items-center justify-between">

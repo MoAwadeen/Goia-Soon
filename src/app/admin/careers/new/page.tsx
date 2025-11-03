@@ -44,14 +44,14 @@ export default function NewJobPage() {
       return
     }
 
-    router.push('/admin/careers')
+    router.push('/admin/careers/jobs')
     router.refresh()
   }
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="space-y-3">
-        <Link href="/admin/careers" className="inline-flex items-center gap-2 text-primary hover:text-primary/80">
+        <Link href="/admin/careers/jobs" className="inline-flex items-center gap-2 text-primary hover:text-primary/80">
           <ArrowLeft className="w-4 h-4" />
           Back to jobs
         </Link>
@@ -144,7 +144,7 @@ export default function NewJobPage() {
 
         <div className="flex justify-end gap-3">
           <Link
-            href="/admin/careers"
+            href="/admin/careers/jobs"
             className="inline-flex items-center gap-2 rounded-full border border-primary/20 px-4 py-2 text-sm font-medium text-primary transition hover:border-primary hover:bg-primary/5"
           >
             Cancel

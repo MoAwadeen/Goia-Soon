@@ -65,7 +65,7 @@ export default function EditJobForm({ job }: { job: Job }) {
       return
     }
 
-    router.push('/admin/careers')
+    router.push('/admin/careers/jobs')
     router.refresh()
   }
 

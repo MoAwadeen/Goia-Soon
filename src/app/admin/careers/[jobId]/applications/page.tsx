@@ -58,7 +58,7 @@ export default async function JobApplicationsPage({ params }: { params: Promise<
     <div className="space-y-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="space-y-3">
-          <Link href="/admin/careers" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium">
+          <Link href="/admin/careers/jobs" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium">
             <ArrowLeft className="w-4 h-4" /> Back to jobs
           </Link>
           <div>

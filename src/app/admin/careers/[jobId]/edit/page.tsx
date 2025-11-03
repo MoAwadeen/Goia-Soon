@@ -32,7 +32,7 @@ export default async function EditJobPage({ params }: { params: Promise<{ jobId:
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="space-y-2">
-        <Link href="/admin/careers" className="inline-flex items-center gap-2 text-primary hover:text-primary/80">
+        <Link href="/admin/careers/jobs" className="inline-flex items-center gap-2 text-primary hover:text-primary/80">
           <ArrowLeft className="w-4 h-4" />
           Back to jobs
         </Link>

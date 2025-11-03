@@ -27,13 +27,13 @@ export default function AdminNavigation({ userEmail }: { userEmail: string }) {
         </Link>
         <div className="flex items-center gap-4">
           <Link
-            href="/admin/careers"
+            href="/admin/careers/jobs"
             className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition hover:bg-primary-foreground/10"
           >
             <Briefcase className="w-4 h-4" /> Jobs
           </Link>
           <Link
-            href="/admin/applications"
+            href="/admin/careers/applications"
             className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition hover:bg-primary-foreground/10"
           >
             <Users className="w-4 h-4" /> Applications
