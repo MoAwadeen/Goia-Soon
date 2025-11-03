@@ -11,7 +11,10 @@ const formSchema = z.object({
   fullName: z.string().min(2, 'Full name is required'),
   email: z.string().email('Valid email required'),
   phone: z.string().optional(),
-  linkedinUrl: z.string().url('Enter a valid URL').optional().or(z.literal('')),
+  linkedinUrl: z.string().optional().or(z.literal('')).refine(
+    (val) => !val || val.trim() === '' || val.includes('linkedin.com') || !val.includes('http'),
+    'Please enter a LinkedIn URL or username'
+  ),
   coverLetter: z.string().min(10, 'Please add a brief cover letter'),
   resume: z
     .instanceof(FileList)
@@ -58,12 +61,23 @@ export default function JobApplicationForm({ jobId }: { jobId: string }) {
       const { error: uploadError } = await supabase.storage.from('resumes').upload(path, file)
       if (uploadError) throw uploadError
 
+      // Normalize LinkedIn URL
+      let linkedinUrl = values.linkedinUrl?.trim() || null
+      if (linkedinUrl && !linkedinUrl.startsWith('http')) {
+        // If user enters just username or partial URL, make it a full URL
+        if (linkedinUrl.startsWith('linkedin.com')) {
+          linkedinUrl = `https://${linkedinUrl}`
+        } else if (!linkedinUrl.includes('linkedin.com')) {
+          linkedinUrl = `https://linkedin.com/in/${linkedinUrl}`
+        }
+      }
+
       const { error: insertError } = await supabase.from('job_applications').insert({
         job_id: jobId,
         full_name: values.fullName,
         email: values.email,
         phone: values.phone || null,
-        linkedin_url: values.linkedinUrl || null,
+        linkedin_url: linkedinUrl,
         cover_letter: values.coverLetter,
         resume_url: path,
       })
@@ -126,9 +140,9 @@ export default function JobApplicationForm({ jobId }: { jobId: string }) {
           <label className="block text-sm font-medium text-foreground/80 mb-2">LinkedIn</label>
           <input
             {...register('linkedinUrl')}
-            type="url"
+            type="text"
             className="w-full rounded-2xl border border-primary/20 bg-white/90 px-4 py-2.5 text-sm shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
-            placeholder="https://linkedin.com/in/..."
+            placeholder="https://linkedin.com/in/yourprofile or just 'yourprofile'"
           />
           {errors.linkedinUrl && <p className="text-xs text-destructive mt-1">{errors.linkedinUrl.message}</p>}
         </div>

@@ -22,7 +22,7 @@ export default function AdminNavigation({ userEmail }: { userEmail: string }) {
   return (
     <nav className="bg-primary text-primary-foreground shadow">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 lg:px-0">
-        <Link href="/admin/careers" className="text-lg font-semibold">
+        <Link href="/admin" className="text-lg font-semibold">
           Goia Admin
         </Link>
         <div className="flex items-center gap-4">

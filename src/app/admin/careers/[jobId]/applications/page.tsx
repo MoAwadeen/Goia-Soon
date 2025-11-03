@@ -28,7 +28,20 @@ async function getData(jobId: string) {
     return { job, applications: [] as JobApplication[] }
   }
 
-  return { job, applications: applications || [] }
+  // Generate signed URLs for resumes
+  const applicationsWithUrls = await Promise.all(
+    (applications || []).map(async (app) => {
+      if (app.resume_url) {
+        const { data } = await supabase.storage
+          .from('resumes')
+          .createSignedUrl(app.resume_url, 3600) // URL valid for 1 hour
+        return { ...app, resume_download_url: data?.signedUrl || null }
+      }
+      return { ...app, resume_download_url: null }
+    })
+  )
+
+  return { job, applications: applicationsWithUrls }
 }
 
 export default async function JobApplicationsPage({ params }: { params: Promise<{ jobId: string }> }) {
@@ -82,10 +95,11 @@ export default async function JobApplicationsPage({ params }: { params: Promise<
                     applicationId={application.id} 
                     currentStatus={application.status} 
                   />
-                  {application.resume_url && (
+                  {(application as any).resume_download_url && (
                     <a
-                      href={application.resume_url}
-                      download
+                      href={(application as any).resume_download_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:bg-primary/90"
                     >
                       <Download className="w-4 h-4" /> Download resume

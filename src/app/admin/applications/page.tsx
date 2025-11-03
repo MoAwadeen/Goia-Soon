@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Briefcase, User, Eye, ArrowRight } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import ResumeDownloadButton from '@/components/ResumeDownloadButton'
 
 async function getApplications() {
   const supabase = await createClient()
@@ -19,6 +21,34 @@ async function getApplications() {
   }
 
   return data || []
+}
+
+function getStatusVariant(status: string): 'default' | 'secondary' | 'destructive' | 'outline' {
+  switch (status) {
+    case 'accepted':
+      return 'default'
+    case 'reviewing':
+      return 'secondary'
+    case 'rejected':
+      return 'destructive'
+    default:
+      return 'outline'
+  }
+}
+
+function getStatusLabel(status: string): string {
+  switch (status) {
+    case 'pending':
+      return 'Pending'
+    case 'reviewing':
+      return 'Reviewing'
+    case 'accepted':
+      return 'Accepted'
+    case 'rejected':
+      return 'Rejected'
+    default:
+      return status
+  }
 }
 
 export default async function AdminApplicationsPage() {
@@ -48,7 +78,12 @@ export default async function AdminApplicationsPage() {
                     <User className="w-5 h-5" />
                   </div>
                   <div>
-                    <div className="text-lg font-semibold text-foreground">{application.full_name}</div>
+                    <div className="flex items-center gap-2">
+                      <div className="text-lg font-semibold text-foreground">{application.full_name}</div>
+                      <Badge variant={getStatusVariant(application.status)}>
+                        {getStatusLabel(application.status)}
+                      </Badge>
+                    </div>
                     <div className="text-sm text-muted-foreground">{application.email}</div>
                   </div>
                 </div>
@@ -62,6 +97,7 @@ export default async function AdminApplicationsPage() {
               </div>
 
               <div className="mt-4 flex flex-wrap items-center gap-3">
+                <ResumeDownloadButton resumePath={application.resume_url} />
                 <Link
                   href={`mailto:${application.email}`}
                   className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary/15"
