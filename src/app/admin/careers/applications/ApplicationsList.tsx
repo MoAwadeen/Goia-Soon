@@ -29,13 +29,22 @@ interface Application {
 function getStatusVariant(status: string): 'default' | 'secondary' | 'destructive' | 'outline' {
   switch (status) {
     case 'accepted':
-      return 'default'
+      return 'outline' // Will use custom green styling
     case 'reviewing':
       return 'secondary'
     case 'rejected':
       return 'destructive'
     default:
       return 'outline'
+  }
+}
+
+function getStatusClassName(status: string): string {
+  switch (status) {
+    case 'accepted':
+      return 'bg-green-100 text-green-800 border-green-200 hover:bg-green-100'
+    default:
+      return ''
   }
 }
 
@@ -68,7 +77,7 @@ export default function ApplicationsList({ applications }: { applications: Appli
   return (
     <div className="space-y-6">
       {/* Filter Section */}
-      <div className="rounded-3xl border border-primary/10 bg-white/90 shadow-md backdrop-blur-sm p-4">
+      <div className="rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-sm font-medium text-foreground">
             <Filter className="w-4 h-4" />
@@ -100,7 +109,7 @@ export default function ApplicationsList({ applications }: { applications: Appli
             <div
               key={application.id}
               id={`application-${application.id}`}
-              className="rounded-3xl border border-primary/10 bg-white/90 shadow-md backdrop-blur-sm p-5 transition hover:shadow-lg"
+              className="rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-5 transition hover:-translate-y-1 hover:shadow-2xl"
             >
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div className="flex items-center gap-3">
@@ -109,8 +118,8 @@ export default function ApplicationsList({ applications }: { applications: Appli
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <div className="text-lg font-semibold text-foreground">{application.full_name}</div>
-                      <Badge variant={getStatusVariant(application.status)}>
+                      <div className="text-lg font-semibold text-primary">{application.full_name}</div>
+                      <Badge variant={getStatusVariant(application.status)} className={getStatusClassName(application.status)}>
                         {getStatusLabel(application.status)}
                       </Badge>
                     </div>
@@ -146,7 +155,7 @@ export default function ApplicationsList({ applications }: { applications: Appli
           ))}
         </div>
       ) : (
-        <div className="rounded-3xl border border-dashed border-primary/20 bg-white/80 p-16 text-center text-muted-foreground">
+        <div className="rounded-3xl border border-dashed border-primary/20 bg-white/95 shadow-lg backdrop-blur-sm p-16 text-center text-muted-foreground">
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
             <ArrowRight className="w-5 h-5" />
           </div>

@@ -29,7 +29,7 @@ export default function ApplicationsView({ applications }: { applications: JobAp
 
   if (!applications.length) {
     return (
-      <div className="rounded-3xl border border-dashed border-primary/20 bg-white/80 p-16 text-center text-muted-foreground">
+      <div className="rounded-3xl border border-dashed border-primary/20 bg-white/95 shadow-lg backdrop-blur-sm p-16 text-center text-muted-foreground">
         No applications yet.
       </div>
     )
@@ -41,7 +41,7 @@ export default function ApplicationsView({ applications }: { applications: JobAp
         <div 
           key={application.id} 
           id={`application-${application.id}`}
-          className="rounded-3xl border border-primary/10 bg-white/90 shadow-lg backdrop-blur-sm p-6 transition-all duration-300"
+          className="rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
         >
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div className="flex items-center gap-3">
@@ -49,7 +49,7 @@ export default function ApplicationsView({ applications }: { applications: JobAp
                 <User className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-lg font-semibold text-foreground">{application.full_name}</div>
+                <div className="text-lg font-semibold text-primary">{application.full_name}</div>
                 <div className="text-sm text-muted-foreground inline-flex items-center gap-2">
                   <Clock className="w-4 h-4" />
                   Applied {new Date(application.submitted_at).toLocaleDateString()}

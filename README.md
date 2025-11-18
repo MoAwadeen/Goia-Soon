@@ -43,13 +43,26 @@ A modern, responsive landing page for Goia's upcoming US launch.
 
 ## 🔧 Environment Variables
 
-For basic functionality, no environment variables are required. However, to enable email collection with Supabase database integration, you'll need to set up:
+For basic functionality, no environment variables are required. However, to enable full functionality, you'll need to set up:
 
+### Supabase Configuration (for database and authentication)
 - `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anonymous key
 - `SUPABASE_SERVICE_ROLE_KEY` - Your Supabase service role key
 
 See [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) for detailed setup instructions.
+
+### Resend Configuration (for email sending)
+- `RESEND_API_KEY` - Your Resend API key for sending emails
+
+To set up Resend:
+1. Sign up at [resend.com](https://resend.com)
+2. Create an API key in the Resend dashboard
+3. Add the API key to your `.env.local` file:
+   ```env
+   RESEND_API_KEY=re_your_api_key_here
+   ```
+4. Verify your domain `goia.app` in Resend dashboard to send from `careers@goia.app`
 
 ## 🎯 Features
 
@@ -60,6 +73,8 @@ See [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) for detailed setup instructions.
 - ✅ Gmail integration
 - ✅ Email signup for early adopters
 - ✅ Supabase database integration
+- ✅ Admin dashboard for career applications
+- ✅ Email sending capability (acceptance/rejection emails via Resend)
 - ✅ Optimized for performance
 
 ## 📁 Project Structure

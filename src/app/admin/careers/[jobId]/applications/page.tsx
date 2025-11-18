@@ -63,7 +63,7 @@ export default async function JobApplicationsPage({ params }: { params: Promise<
             <ArrowLeft className="w-4 h-4" /> Back to jobs
           </Link>
           <div>
-            <h1 className="text-3xl font-semibold text-foreground">{job.title}</h1>
+            <h1 className="text-3xl font-semibold text-primary">{job.title}</h1>
             <p className="text-sm text-muted-foreground">
               {applications.length} application{applications.length !== 1 ? 's' : ''}
             </p>
@@ -75,7 +75,7 @@ export default async function JobApplicationsPage({ params }: { params: Promise<
       </div>
 
       <Suspense fallback={
-        <div className="rounded-3xl border border-primary/10 bg-white/90 shadow-lg backdrop-blur-sm p-6 animate-pulse">
+        <div className="rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-6 animate-pulse">
           <div className="h-32 bg-muted/20 rounded-2xl"></div>
         </div>
       }>

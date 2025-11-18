@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
-import { CheckCircle, Loader2 } from 'lucide-react'
+import { CheckCircle, Loader2, Mail, MailCheck } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
 
 const statusOptions = [
   { value: 'pending', label: 'Pending', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
@@ -21,9 +22,50 @@ export default function ApplicationStatusUpdater({
 }) {
   const supabase = createClient()
   const router = useRouter()
+  const { toast } = useToast()
   const [status, setStatus] = useState(currentStatus)
   const [updating, setUpdating] = useState(false)
+  const [sendingEmail, setSendingEmail] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [emailSent, setEmailSent] = useState(false)
+
+  const sendEmail = async (emailType: 'accepted' | 'rejected') => {
+    setSendingEmail(true)
+    try {
+      const response = await fetch('/api/emails/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          applicationId,
+          emailType,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send email')
+      }
+
+      setEmailSent(true)
+      toast({
+        title: 'Email sent successfully',
+        description: `The ${emailType === 'accepted' ? 'acceptance' : 'rejection'} email has been sent to the applicant.`,
+      })
+      setTimeout(() => setEmailSent(false), 5000)
+    } catch (error) {
+      console.error('[admin] failed to send email', error)
+      toast({
+        title: 'Failed to send email',
+        description: error instanceof Error ? error.message : 'Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setSendingEmail(false)
+    }
+  }
 
   const handleStatusChange = async (newStatus: string) => {
     if (!supabase || newStatus === status) return
@@ -41,9 +83,18 @@ export default function ApplicationStatusUpdater({
       setShowSuccess(true)
       setTimeout(() => setShowSuccess(false), 2000)
       router.refresh()
+
+      // Automatically send email if status changed to accepted or rejected
+      if (newStatus === 'accepted' || newStatus === 'rejected') {
+        await sendEmail(newStatus as 'accepted' | 'rejected')
+      }
     } catch (error) {
       console.error('[admin] failed to update application status', error)
-      alert('Failed to update status. Please try again.')
+      toast({
+        title: 'Failed to update status',
+        description: 'Please try again.',
+        variant: 'destructive',
+      })
     } finally {
       setUpdating(false)
     }
@@ -57,7 +108,7 @@ export default function ApplicationStatusUpdater({
         <select
           value={status}
           onChange={(e) => handleStatusChange(e.target.value)}
-          disabled={updating}
+          disabled={updating || sendingEmail}
           className={`rounded-full border px-4 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50 ${currentOption.color}`}
         >
           {statusOptions.map((option) => (
@@ -67,7 +118,19 @@ export default function ApplicationStatusUpdater({
           ))}
         </select>
         {updating && <Loader2 className="h-4 w-4 animate-spin text-primary" />}
+        {sendingEmail && <Mail className="h-4 w-4 animate-pulse text-primary" />}
         {showSuccess && <CheckCircle className="h-4 w-4 text-green-600" />}
+        {(status === 'accepted' || status === 'rejected') && !sendingEmail && !emailSent && (
+          <button
+            onClick={() => sendEmail(status as 'accepted' | 'rejected')}
+            className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition hover:bg-primary/20"
+            title={`Send ${status === 'accepted' ? 'acceptance' : 'rejection'} email`}
+          >
+            <Mail className="h-3 w-3" />
+            Send email
+          </button>
+        )}
+        {emailSent && <MailCheck className="h-4 w-4 text-green-600" title="Email sent" />}
       </div>
     </div>
   )

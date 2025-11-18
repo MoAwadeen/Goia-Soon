@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { LogOut, Briefcase, Users } from 'lucide-react'
+import { LogOut, Briefcase, Users, Mail } from 'lucide-react'
 
 export default function AdminNavigation({ userEmail }: { userEmail: string }) {
   const supabase = createClient()
@@ -37,6 +37,19 @@ export default function AdminNavigation({ userEmail }: { userEmail: string }) {
             className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition hover:bg-primary-foreground/10"
           >
             <Users className="w-4 h-4" /> Applications
+          </Link>
+          <Link
+            href="/admin/careers/emails"
+            className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition hover:bg-primary-foreground/10"
+          >
+            <Mail className="w-4 h-4" /> Emails
+          </Link>
+          <Link
+            href="/admin/careers/emails/templates"
+            className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition hover:bg-primary-foreground/10"
+            title="Email Templates"
+          >
+            <Mail className="w-4 h-4" /> Templates
           </Link>
           <div className="hidden text-xs font-medium uppercase tracking-wide text-primary-foreground/80 sm:block">
             {userEmail}

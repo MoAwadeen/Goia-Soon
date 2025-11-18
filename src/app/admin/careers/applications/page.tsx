@@ -25,9 +25,9 @@ export default async function AdminApplicationsPage() {
 
   return (
     <div className="space-y-8">
-      <header className="rounded-3xl border border-primary/10 bg-white/90 shadow-lg backdrop-blur-sm p-6">
+      <header className="rounded-3xl border border-primary/10 bg-white/95 shadow-2xl backdrop-blur-sm p-6">
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-semibold text-foreground">Applications overview</h1>
+          <h1 className="text-3xl font-semibold text-primary">Applications overview</h1>
           <p className="text-sm text-muted-foreground">
             Track every candidate from a single dashboard. Follow up directly or drill into a specific job for more context.
           </p>

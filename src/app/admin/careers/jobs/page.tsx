@@ -28,7 +28,7 @@ export default async function AdminCareersPage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="space-y-2">
-          <h1 className="text-3xl font-semibold text-foreground">Jobs management</h1>
+          <h1 className="text-3xl font-semibold text-primary">Jobs management</h1>
           <p className="text-sm text-muted-foreground">
             Publish new opportunities, pause roles, and keep track of how many people have applied.
           </p>
@@ -53,12 +53,12 @@ export default async function AdminCareersPage() {
             return (
               <div
                 key={job.id}
-                className="rounded-3xl border border-primary/10 bg-white/90 shadow-md backdrop-blur-sm p-6 transition hover:shadow-lg"
+                className="rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-6 transition hover:-translate-y-1 hover:shadow-2xl"
               >
                 <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                   <div className="space-y-2">
                     <div className="flex items-center gap-3">
-                      <h2 className="text-xl font-semibold text-foreground">{job.title}</h2>
+                      <h2 className="text-xl font-semibold text-primary">{job.title}</h2>
                       <span className={statusClasses}>
                         {job.is_active ? (
                           <>
@@ -118,7 +118,7 @@ export default async function AdminCareersPage() {
           })}
         </div>
       ) : (
-        <div className="rounded-3xl border border-dashed border-primary/20 bg-white/80 p-16 text-center text-muted-foreground">
+        <div className="rounded-3xl border border-dashed border-primary/20 bg-white/95 shadow-lg backdrop-blur-sm p-16 text-center text-muted-foreground">
           No jobs posted yet. Create your first role to start receiving applications.
         </div>
       )}
