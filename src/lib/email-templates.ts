@@ -1,3 +1,5 @@
+import { createClient } from '@/lib/supabase/server';
+
 interface EmailData {
   applicantName: string;
   jobTitle: string;
@@ -49,17 +51,6 @@ const DEFAULT_ACCEPTANCE_TEMPLATE = `<!DOCTYPE html>
 </body>
 </html>`
 
-export function getAcceptanceEmailTemplate({ applicantName, jobTitle }: EmailData): string {
-  // Try to get custom template from environment or use default
-  // In a real app, this would come from a database
-  let template = DEFAULT_ACCEPTANCE_TEMPLATE
-  
-  // Replace placeholders
-  return template
-    .replace(/{applicantName}/g, applicantName)
-    .replace(/{jobTitle}/g, jobTitle)
-}
-
 const DEFAULT_REJECTION_TEMPLATE = `<!DOCTYPE html>
 <html>
 <head>
@@ -105,14 +96,68 @@ const DEFAULT_REJECTION_TEMPLATE = `<!DOCTYPE html>
 </body>
 </html>`
 
-export function getRejectionEmailTemplate({ applicantName, jobTitle }: EmailData): string {
-  // Try to get custom template from environment or use default
-  // In a real app, this would come from a database
-  let template = DEFAULT_REJECTION_TEMPLATE
+async function getTemplateFromDatabase(type: 'accepted' | 'rejected'): Promise<{ html_content: string; subject: string } | null> {
+  try {
+    const supabase = await createClient();
+    if (!supabase) {
+      return null;
+    }
+
+    const { data, error } = await supabase
+      .from('email_templates')
+      .select('html_content, subject')
+      .eq('type', type)
+      .eq('is_default', true)
+      .single();
+
+    if (error || !data) {
+      return null;
+    }
+
+    return { html_content: data.html_content, subject: data.subject };
+  } catch (error) {
+    console.error('Error fetching template from database:', error);
+    return null;
+  }
+}
+
+export async function getAcceptanceEmailTemplate({ applicantName, jobTitle }: EmailData): Promise<string> {
+  // Try to get template from database
+  const dbTemplate = await getTemplateFromDatabase('accepted');
+  
+  let template = dbTemplate?.html_content || DEFAULT_ACCEPTANCE_TEMPLATE;
   
   // Replace placeholders
   return template
     .replace(/{applicantName}/g, applicantName)
     .replace(/{jobTitle}/g, jobTitle)
 }
+
+export async function getRejectionEmailTemplate({ applicantName, jobTitle }: EmailData): Promise<string> {
+  // Try to get template from database
+  const dbTemplate = await getTemplateFromDatabase('rejected');
+  
+  let template = dbTemplate?.html_content || DEFAULT_REJECTION_TEMPLATE;
+  
+  // Replace placeholders
+  return template
+    .replace(/{applicantName}/g, applicantName)
+    .replace(/{jobTitle}/g, jobTitle)
+}
+
+export async function getEmailTemplateSubject(type: 'accepted' | 'rejected', emailData: EmailData): Promise<string> {
+  const dbTemplate = await getTemplateFromDatabase(type);
+  
+  if (dbTemplate?.subject) {
+    return dbTemplate.subject
+      .replace(/{applicantName}/g, emailData.applicantName)
+      .replace(/{jobTitle}/g, emailData.jobTitle);
+  }
+  
+  // Default subjects
+  return type === 'accepted'
+    ? `Congratulations! Your application for ${emailData.jobTitle} has been accepted`
+    : `Update on your application for ${emailData.jobTitle}`;
+}
+
 
