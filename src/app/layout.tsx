@@ -6,6 +6,11 @@ import { Analytics } from "@vercel/analytics/next";
 export const metadata: Metadata = {
   title: 'Goia - Coming Soon!',
   description: 'Goia is coming soon, Stay tuned!',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+  },
   icons: {
     icon: [
       { url: 'https://drive.google.com/uc?export=view&id=1jRz7HMV7vaRT9bJgdKm_PscgEUeR3zf0', sizes: 'any' },
