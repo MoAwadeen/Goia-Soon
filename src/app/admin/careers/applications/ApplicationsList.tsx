@@ -138,12 +138,6 @@ export default function ApplicationsList({ applications }: { applications: Appli
               <div className="mt-4 flex flex-wrap items-center gap-3">
                 <ResumeDownloadButton resumePath={application.resume_url} />
                 <Link
-                  href={`mailto:${application.email}`}
-                  className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary/15"
-                >
-                  Contact applicant
-                </Link>
-                <Link
                   href={`/admin/careers/${application.job_id}/applications?applicationId=${application.id}#application-${application.id}`}
                   className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:bg-primary/90"
                 >

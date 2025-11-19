@@ -83,11 +83,6 @@ export default function ApplicationStatusUpdater({
       setShowSuccess(true)
       setTimeout(() => setShowSuccess(false), 2000)
       router.refresh()
-
-      // Automatically send email if status changed to accepted or rejected
-      if (newStatus === 'accepted' || newStatus === 'rejected') {
-        await sendEmail(newStatus as 'accepted' | 'rejected')
-      }
     } catch (error) {
       console.error('[admin] failed to update application status', error)
       toast({
