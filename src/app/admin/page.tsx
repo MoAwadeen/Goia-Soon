@@ -152,32 +152,6 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      {/* Recent Activity or Instructions */}
-      <div className="rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-6">
-        <h3 className="text-lg font-semibold text-primary mb-3">Getting Started</h3>
-        <ul className="space-y-2 text-sm text-foreground/80">
-          <li className="flex items-start gap-2">
-            <span className="text-primary mt-0.5">•</span>
-            <span>Create and publish job postings to attract candidates</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-primary mt-0.5">•</span>
-            <span>Review applications and update their status as you progress</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-primary mt-0.5">•</span>
-            <span>Send professional acceptance and rejection emails to applicants</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-primary mt-0.5">•</span>
-            <span>Customize email templates to match your brand voice</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-primary mt-0.5">•</span>
-            <span>Download resumes and contact applicants directly</span>
-          </li>
-        </ul>
-      </div>
     </div>
   )
 }
