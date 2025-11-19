@@ -125,7 +125,10 @@ export default function ApplicationStatusUpdater({
             Send email
           </button>
         )}
-        {emailSent && <MailCheck className="h-4 w-4 text-green-600" title="Email sent" />}
+        <span title="Email sent">
+          <MailCheck className="h-4 w-4 text-green-600" />
+        </span>
+
       </div>
     </div>
   )
