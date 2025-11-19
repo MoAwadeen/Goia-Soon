@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Briefcase, Users, BarChart, Settings, ArrowRight, Mail } from 'lucide-react'
+import { Briefcase, Users, BarChart, Settings, ArrowRight, Mail, FileText, Image, Globe, Database, Shield, Zap } from 'lucide-react'
 
 async function getStats() {
   const supabase = await createClient()
@@ -133,7 +133,7 @@ export default async function AdminDashboard() {
           </Link>
 
           <Link
-            href="/admin/careers/emails"
+            href="/admin/careers/applications?tab=emails"
             className="group rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-6 transition hover:-translate-y-1 hover:shadow-2xl hover:border-primary/20"
           >
             <div className="flex items-center justify-between">
@@ -142,13 +142,129 @@ export default async function AdminDashboard() {
                   <Mail className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-primary">Send Emails</h3>
+                  <h3 className="text-lg font-semibold text-primary">Email Management</h3>
                   <p className="text-sm text-muted-foreground">Send acceptance and rejection emails</p>
                 </div>
               </div>
               <ArrowRight className="w-5 h-5 text-primary transition group-hover:translate-x-1" />
             </div>
           </Link>
+        </div>
+      </div>
+
+      {/* CMS Sections - Ready for Future Expansion */}
+      <div className="space-y-4 mt-12">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-primary">Content Management</h2>
+          <span className="text-xs text-muted-foreground bg-muted px-3 py-1 rounded-full">Coming Soon</span>
+        </div>
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          <div className="group rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-6 transition hover:-translate-y-1 hover:shadow-2xl hover:border-primary/20 opacity-60 cursor-not-allowed">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="rounded-2xl bg-primary/10 text-primary p-3">
+                  <FileText className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-primary">Pages & Content</h3>
+                  <p className="text-sm text-muted-foreground">Manage website pages and content</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="group rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-6 transition hover:-translate-y-1 hover:shadow-2xl hover:border-primary/20 opacity-60 cursor-not-allowed">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="rounded-2xl bg-primary/10 text-primary p-3">
+                  <Image className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-primary">Media Library</h3>
+                  <p className="text-sm text-muted-foreground">Upload and manage media files</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="group rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-6 transition hover:-translate-y-1 hover:shadow-2xl hover:border-primary/20 opacity-60 cursor-not-allowed">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="rounded-2xl bg-primary/10 text-primary p-3">
+                  <Globe className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-primary">Site Settings</h3>
+                  <p className="text-sm text-muted-foreground">Configure site-wide settings</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="group rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-6 transition hover:-translate-y-1 hover:shadow-2xl hover:border-primary/20 opacity-60 cursor-not-allowed">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="rounded-2xl bg-primary/10 text-primary p-3">
+                  <Database className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-primary">Data Management</h3>
+                  <p className="text-sm text-muted-foreground">Manage database and data</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* System & Security */}
+      <div className="space-y-4 mt-12">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-primary">System & Security</h2>
+          <span className="text-xs text-muted-foreground bg-muted px-3 py-1 rounded-full">Coming Soon</span>
+        </div>
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="group rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-6 transition hover:-translate-y-1 hover:shadow-2xl hover:border-primary/20 opacity-60 cursor-not-allowed">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="rounded-2xl bg-primary/10 text-primary p-3">
+                  <Shield className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-primary">User Management</h3>
+                  <p className="text-sm text-muted-foreground">Manage admin users and permissions</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="group rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-6 transition hover:-translate-y-1 hover:shadow-2xl hover:border-primary/20 opacity-60 cursor-not-allowed">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="rounded-2xl bg-primary/10 text-primary p-3">
+                  <Zap className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-primary">Analytics & Reports</h3>
+                  <p className="text-sm text-muted-foreground">View analytics and generate reports</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="group rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-6 transition hover:-translate-y-1 hover:shadow-2xl hover:border-primary/20 opacity-60 cursor-not-allowed">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="rounded-2xl bg-primary/10 text-primary p-3">
+                  <Settings className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-primary">System Settings</h3>
+                  <p className="text-sm text-muted-foreground">Configure system preferences</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

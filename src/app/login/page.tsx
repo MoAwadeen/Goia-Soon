@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, Eye, EyeOff } from 'lucide-react'
+import { Loader2, Eye, EyeOff, Briefcase, ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 
 const placeholderImages = {
@@ -69,7 +70,27 @@ export default function AdminLoginPage() {
         className="-z-10"
         data-ai-hint="abstract background"
       />
-      <div className="absolute top-8 left-1/2 -translate-x-1/2">
+      
+      {/* Navigation Bar */}
+      <nav className="absolute top-0 left-0 right-0 z-10 px-4 lg:px-6 h-16 flex items-center justify-between bg-background/80 backdrop-blur-sm border-b">
+        <div className="container mx-auto flex items-center justify-between w-full">
+          <Link href="/" className="flex items-center gap-2 text-primary hover:opacity-80 transition">
+            <ArrowLeft className="w-4 h-4" />
+            <span className="text-sm font-medium">Back to Home</span>
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link 
+              href="/careers" 
+              className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-white/90 px-4 py-2 text-sm font-medium text-primary transition hover:border-primary hover:bg-primary/5"
+            >
+              <Briefcase className="w-4 h-4" />
+              Careers
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      <div className="absolute top-20 left-1/2 -translate-x-1/2">
         <Image src={placeholderImages.logo} width="128" height="128" alt="Logo" data-ai-hint="company logo" />
       </div>
       
