@@ -126,9 +126,8 @@ export default function ApplicationStatusUpdater({
           </button>
         )}
           <span title="Email sent">
-           <MailCheck className="h-4 w-4 text-green-600" />
+            <MailCheck className="h-4 w-4 text-green-600" />
           </span>
-
 
       </div>
     </div>
