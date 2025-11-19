@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Save, Eye, Code2, Loader2, Mail, CheckCircle, XCircle, Plus, Trash2, Star, Copy, Input } from 'lucide-react'
+import { Save, Eye, Code2, Loader2, Mail, CheckCircle, XCircle, Plus, Trash2, Star, Copy } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Input as InputComponent } from '@/components/ui/input'
