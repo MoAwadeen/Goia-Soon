@@ -62,14 +62,30 @@ export async function POST(request: NextRequest) {
       jobTitle: jobTitle,
     };
 
+    // Get the appropriate email template from database
+    const templateType = emailType === 'accepted' ? 'accepted' : 'rejected'
+    const { data: templateData } = await supabase
+      .from('email_templates')
+      .select('subject, html_content')
+      .eq('type', templateType)
+      .eq('is_default', true)
+      .single()
+
     // Get the appropriate email template
     const htmlContent = emailType === 'accepted'
-      ? getAcceptanceEmailTemplate(emailData)
-      : getRejectionEmailTemplate(emailData);
+      ? await getAcceptanceEmailTemplate(emailData)
+      : await getRejectionEmailTemplate(emailData)
 
-    const subject = emailType === 'accepted'
+    // Use template subject if available, otherwise use default
+    let subject = emailType === 'accepted'
       ? `Congratulations! Your application for ${jobTitle} has been accepted`
-      : `Update on your application for ${jobTitle}`;
+      : `Update on your application for ${jobTitle}`
+    
+    if (templateData?.subject) {
+      subject = templateData.subject
+        .replace(/{applicantName}/g, emailData.applicantName)
+        .replace(/{jobTitle}/g, emailData.jobTitle)
+    }
 
     // Send email via Resend
     const { data, error } = await resend.emails.send({

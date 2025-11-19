@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Save, Eye, Code2, Loader2, Mail, CheckCircle, XCircle } from 'lucide-react'
+import { Save, Eye, Code2, Loader2, Mail, CheckCircle, XCircle, Plus, Trash2, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/hooks/use-toast'
@@ -11,6 +12,34 @@ import {
   Alert,
   AlertDescription,
 } from "@/components/ui/alert"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
+
+interface EmailTemplate {
+  id: string
+  name: string
+  type: 'accepted' | 'rejected'
+  subject: string
+  html_content: string
+  is_default: boolean
+  created_at: string
+  updated_at: string
+}
 
 const DEFAULT_ACCEPTANCE = `<!DOCTYPE html>
 <html>
@@ -105,43 +134,199 @@ const DEFAULT_REJECTION = `<!DOCTYPE html>
 
 export default function EmailTemplateEditor() {
   const { toast } = useToast()
-  const [acceptanceTemplate, setAcceptanceTemplate] = useState(DEFAULT_ACCEPTANCE)
-  const [rejectionTemplate, setRejectionTemplate] = useState(DEFAULT_REJECTION)
+  const [templates, setTemplates] = useState<EmailTemplate[]>([])
+  const [selectedTemplate, setSelectedTemplate] = useState<EmailTemplate | null>(null)
+  const [templateName, setTemplateName] = useState('')
+  const [templateSubject, setTemplateSubject] = useState('')
+  const [templateContent, setTemplateContent] = useState('')
+  const [templateType, setTemplateType] = useState<'accepted' | 'rejected'>('accepted')
+  const [isDefault, setIsDefault] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [previewData, setPreviewData] = useState({
     applicantName: 'John Doe',
     jobTitle: 'Senior Software Engineer',
   })
-  const [activeTab, setActiveTab] = useState<'acceptance' | 'rejection'>('acceptance')
+  const [activeTab, setActiveTab] = useState<'accepted' | 'rejected'>('accepted')
+  const [isNewTemplateDialogOpen, setIsNewTemplateDialogOpen] = useState(false)
 
   useEffect(() => {
-    // Load saved templates from localStorage
-    const savedAcceptance = localStorage.getItem('email_template_acceptance')
-    const savedRejection = localStorage.getItem('email_template_rejection')
-    if (savedAcceptance) setAcceptanceTemplate(savedAcceptance)
-    if (savedRejection) setRejectionTemplate(savedRejection)
+    loadTemplates()
   }, [])
 
-  const handleSave = async () => {
-    setSaving(true)
+  useEffect(() => {
+    if (activeTab) {
+      const defaultTemplate = templates.find(t => t.type === activeTab && t.is_default)
+      if (defaultTemplate) {
+        setSelectedTemplate(defaultTemplate)
+        setTemplateName(defaultTemplate.name)
+        setTemplateSubject(defaultTemplate.subject)
+        setTemplateContent(defaultTemplate.html_content)
+        setTemplateType(defaultTemplate.type)
+        setIsDefault(defaultTemplate.is_default)
+      } else {
+        // Reset to defaults
+        setSelectedTemplate(null)
+        setTemplateName('')
+        setTemplateSubject(activeTab === 'accepted' ? 'Congratulations! Your application has been accepted' : 'Update on your application')
+        setTemplateContent(activeTab === 'accepted' ? DEFAULT_ACCEPTANCE : DEFAULT_REJECTION)
+        setTemplateType(activeTab)
+        setIsDefault(false)
+      }
+    }
+  }, [activeTab, templates])
+
+  const loadTemplates = async () => {
+    setLoading(true)
     try {
-      // Save to localStorage (in production, you'd save to database)
-      localStorage.setItem('email_template_acceptance', acceptanceTemplate)
-      localStorage.setItem('email_template_rejection', rejectionTemplate)
-      
-      toast({
-        title: 'Templates saved successfully',
-        description: 'Your email templates have been saved and will be used for future emails.',
-      })
+      const response = await fetch('/api/email-templates')
+      const data = await response.json()
+      if (response.ok) {
+        setTemplates(data.templates || [])
+      } else {
+        toast({
+          title: 'Failed to load templates',
+          description: data.error || 'Please try again.',
+          variant: 'destructive',
+        })
+      }
     } catch (error) {
       toast({
-        title: 'Failed to save templates',
-        description: error instanceof Error ? error.message : 'Please try again.',
+        title: 'Failed to load templates',
+        description: 'Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleTemplateSelect = (template: EmailTemplate) => {
+    setSelectedTemplate(template)
+    setTemplateName(template.name)
+    setTemplateSubject(template.subject)
+    setTemplateContent(template.html_content)
+    setTemplateType(template.type)
+    setIsDefault(template.is_default)
+  }
+
+  const handleSave = async () => {
+    if (!templateName || !templateSubject || !templateContent) {
+      toast({
+        title: 'Missing fields',
+        description: 'Please fill in all required fields.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    setSaving(true)
+    try {
+      const url = selectedTemplate
+        ? '/api/email-templates'
+        : '/api/email-templates'
+      
+      const method = selectedTemplate ? 'PUT' : 'POST'
+      
+      const body = selectedTemplate
+        ? {
+            id: selectedTemplate.id,
+            name: templateName,
+            subject: templateSubject,
+            html_content: templateContent,
+            is_default: isDefault,
+            type: templateType,
+          }
+        : {
+            name: templateName,
+            type: templateType,
+            subject: templateSubject,
+            html_content: templateContent,
+            is_default: isDefault,
+          }
+
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        toast({
+          title: 'Template saved successfully',
+          description: 'Your email template has been saved.',
+        })
+        await loadTemplates()
+        if (data.template) {
+          handleTemplateSelect(data.template)
+        }
+      } else {
+        toast({
+          title: 'Failed to save template',
+          description: data.error || 'Please try again.',
+          variant: 'destructive',
+        })
+      }
+    } catch (error) {
+      toast({
+        title: 'Failed to save template',
+        description: 'Please try again.',
         variant: 'destructive',
       })
     } finally {
       setSaving(false)
     }
+  }
+
+  const handleDelete = async (templateId: string) => {
+    if (!confirm('Are you sure you want to delete this template?')) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/email-templates?id=${templateId}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        toast({
+          title: 'Template deleted',
+          description: 'The template has been deleted successfully.',
+        })
+        await loadTemplates()
+        if (selectedTemplate?.id === templateId) {
+          setSelectedTemplate(null)
+          setTemplateName('')
+          setTemplateSubject('')
+          setTemplateContent('')
+          setIsDefault(false)
+        }
+      } else {
+        toast({
+          title: 'Failed to delete template',
+          description: 'Please try again.',
+          variant: 'destructive',
+        })
+      }
+    } catch (error) {
+      toast({
+        title: 'Failed to delete template',
+        description: 'Please try again.',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const handleNewTemplate = () => {
+    setSelectedTemplate(null)
+    setTemplateName('')
+    setTemplateSubject(activeTab === 'accepted' ? 'Congratulations! Your application has been accepted' : 'Update on your application')
+    setTemplateContent(activeTab === 'accepted' ? DEFAULT_ACCEPTANCE : DEFAULT_REJECTION)
+    setTemplateType(activeTab)
+    setIsDefault(false)
+    setIsNewTemplateDialogOpen(false)
   }
 
   const getPreview = (template: string) => {
@@ -150,96 +335,169 @@ export default function EmailTemplateEditor() {
       .replace(/{jobTitle}/g, previewData.jobTitle)
   }
 
-  const currentTemplate = activeTab === 'acceptance' ? acceptanceTemplate : rejectionTemplate
-  const setCurrentTemplate = activeTab === 'acceptance' ? setAcceptanceTemplate : setRejectionTemplate
+  const filteredTemplates = templates.filter(t => t.type === activeTab)
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
       <Card className="rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-6">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-primary">Edit Templates</h2>
+            <h2 className="text-xl font-semibold text-primary">Email Templates</h2>
             <p className="text-sm text-muted-foreground mt-1">
-              Use placeholders: {'{'}applicantName{'}'}, {'{'}jobTitle{'}'}
+              Manage your email templates. Use placeholders: {'{'}applicantName{'}'}, {'{'}jobTitle{'}'}
             </p>
           </div>
-          <Button
-            onClick={handleSave}
-            disabled={saving}
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
-          >
-            {saving ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" /> Saving...
-              </>
-            ) : (
-              <>
-                <Save className="w-4 h-4" /> Save Templates
-              </>
-            )}
-          </Button>
+          <Dialog open={isNewTemplateDialogOpen} onOpenChange={setIsNewTemplateDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
+                <Plus className="w-4 h-4" /> New Template
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create New Template</DialogTitle>
+                <DialogDescription>
+                  Create a new email template. You can customize it after creation.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div>
+                  <Label>Template Type</Label>
+                  <Select value={templateType} onValueChange={(v) => setTemplateType(v as 'accepted' | 'rejected')}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="accepted">Acceptance Email</SelectItem>
+                      <SelectItem value="rejected">Rejection Email</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button onClick={handleNewTemplate} className="w-full">
+                  Create Template
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
-        <Alert className="mb-4">
-          <Mail className="h-4 w-4" />
-          <AlertDescription>
-            Templates are saved in your browser's local storage. To make them permanent, integrate with your database.
-          </AlertDescription>
-        </Alert>
-
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'acceptance' | 'rejection')}>
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'accepted' | 'rejected')}>
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="acceptance" className="flex items-center gap-2">
+            <TabsTrigger value="accepted" className="flex items-center gap-2">
               <CheckCircle className="w-4 h-4" /> Acceptance Email
             </TabsTrigger>
-            <TabsTrigger value="rejection" className="flex items-center gap-2">
+            <TabsTrigger value="rejected" className="flex items-center gap-2">
               <XCircle className="w-4 h-4" /> Rejection Email
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="acceptance" className="space-y-4 mt-4">
-            <div className="grid gap-4 md:grid-cols-2">
+          <TabsContent value={activeTab} className="space-y-4 mt-4">
+            {/* Template Selector */}
+            {filteredTemplates.length > 0 && (
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                  <Code2 className="w-4 h-4" /> HTML Code
+                <Label>Select Template</Label>
+                <div className="flex flex-wrap gap-2">
+                  {filteredTemplates.map((template) => (
+                    <div
+                      key={template.id}
+                      className={`flex items-center gap-2 rounded-lg border p-3 cursor-pointer transition ${
+                        selectedTemplate?.id === template.id
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border hover:border-primary/50'
+                      }`}
+                      onClick={() => handleTemplateSelect(template)}
+                    >
+                      {template.is_default && <Star className="w-4 h-4 text-primary fill-primary" />}
+                      <span className="text-sm font-medium">{template.name}</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="ml-auto h-6 w-6 p-0"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleDelete(template.id)
+                        }}
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  ))}
                 </div>
-                <Textarea
-                  value={acceptanceTemplate}
-                  onChange={(e) => setAcceptanceTemplate(e.target.value)}
-                  className="font-mono text-sm min-h-[500px]"
-                  placeholder="Enter HTML template..."
-                />
               </div>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                  <Eye className="w-4 h-4" /> Preview
-                </div>
-                <div className="rounded-lg border border-primary/10 bg-white p-4 min-h-[500px] overflow-auto">
-                  <div dangerouslySetInnerHTML={{ __html: getPreview(acceptanceTemplate) }} />
-                </div>
-              </div>
-            </div>
-          </TabsContent>
+            )}
 
-          <TabsContent value="rejection" className="space-y-4 mt-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                  <Code2 className="w-4 h-4" /> HTML Code
+            {/* Template Editor */}
+            <div className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-4">
+                  <div>
+                    <Label>Template Name</Label>
+                    <Input
+                      value={templateName}
+                      onChange={(e) => setTemplateName(e.target.value)}
+                      placeholder="e.g., Standard Acceptance Email"
+                    />
+                  </div>
+                  <div>
+                    <Label>Email Subject</Label>
+                    <Input
+                      value={templateSubject}
+                      onChange={(e) => setTemplateSubject(e.target.value)}
+                      placeholder="e.g., Congratulations! Your application has been accepted"
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="is-default"
+                      checked={isDefault}
+                      onCheckedChange={(checked) => setIsDefault(checked as boolean)}
+                    />
+                    <Label htmlFor="is-default" className="cursor-pointer">
+                      Set as default template
+                    </Label>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                      <Code2 className="w-4 h-4" /> HTML Code
+                    </div>
+                    <Textarea
+                      value={templateContent}
+                      onChange={(e) => setTemplateContent(e.target.value)}
+                      className="font-mono text-sm min-h-[400px]"
+                      placeholder="Enter HTML template..."
+                    />
+                  </div>
+                  <Button
+                    onClick={handleSave}
+                    disabled={saving || !templateName || !templateSubject || !templateContent}
+                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                  >
+                    {saving ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4 mr-2" /> {selectedTemplate ? 'Update Template' : 'Save Template'}
+                      </>
+                    )}
+                  </Button>
                 </div>
-                <Textarea
-                  value={rejectionTemplate}
-                  onChange={(e) => setRejectionTemplate(e.target.value)}
-                  className="font-mono text-sm min-h-[500px]"
-                  placeholder="Enter HTML template..."
-                />
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                  <Eye className="w-4 h-4" /> Preview
-                </div>
-                <div className="rounded-lg border border-primary/10 bg-white p-4 min-h-[500px] overflow-auto">
-                  <div dangerouslySetInnerHTML={{ __html: getPreview(rejectionTemplate) }} />
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                    <Eye className="w-4 h-4" /> Preview
+                  </div>
+                  <div className="rounded-lg border border-primary/10 bg-white p-4 min-h-[400px] overflow-auto">
+                    <div dangerouslySetInnerHTML={{ __html: getPreview(templateContent) }} />
+                  </div>
                 </div>
               </div>
             </div>
@@ -247,26 +505,26 @@ export default function EmailTemplateEditor() {
         </Tabs>
 
         <div className="mt-4 p-3 rounded-lg bg-primary/5 border border-primary/10">
-          <p className="text-xs text-muted-foreground">
-            <strong>Preview Data:</strong> You can customize the preview by editing the placeholder values. These are just for preview purposes.
+          <p className="text-xs text-muted-foreground mb-2">
+            <strong>Preview Data:</strong> Customize the preview values below.
           </p>
-          <div className="mt-2 grid gap-2 md:grid-cols-2">
+          <div className="grid gap-2 md:grid-cols-2">
             <div>
-              <label className="text-xs font-medium text-foreground">Applicant Name</label>
-              <input
+              <Label className="text-xs">Applicant Name</Label>
+              <Input
                 type="text"
                 value={previewData.applicantName}
                 onChange={(e) => setPreviewData({ ...previewData, applicantName: e.target.value })}
-                className="mt-1 w-full rounded-md border border-primary/10 bg-white px-3 py-1.5 text-sm"
+                className="mt-1 text-sm"
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-foreground">Job Title</label>
-              <input
+              <Label className="text-xs">Job Title</Label>
+              <Input
                 type="text"
                 value={previewData.jobTitle}
                 onChange={(e) => setPreviewData({ ...previewData, jobTitle: e.target.value })}
-                className="mt-1 w-full rounded-md border border-primary/10 bg-white px-3 py-1.5 text-sm"
+                className="mt-1 text-sm"
               />
             </div>
           </div>
@@ -275,4 +533,3 @@ export default function EmailTemplateEditor() {
     </div>
   )
 }
-
