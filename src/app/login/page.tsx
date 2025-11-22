@@ -51,7 +51,7 @@ export default function AdminLoginPage() {
         throw new Error('Unauthorized')
       }
 
-      router.push('/admin/careers')
+      router.push('/admin')
       router.refresh()
     } catch (err: any) {
       setError(err.message)
@@ -70,7 +70,7 @@ export default function AdminLoginPage() {
         className="-z-10"
         data-ai-hint="abstract background"
       />
-      
+
       {/* Navigation Bar */}
       <nav className="absolute top-0 left-0 right-0 z-10 px-4 lg:px-6 h-16 flex items-center justify-between bg-background/80 backdrop-blur-sm border-b">
         <div className="container mx-auto flex items-center justify-between w-full">
@@ -79,8 +79,8 @@ export default function AdminLoginPage() {
             <span className="text-sm font-medium">Back to Home</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link 
-              href="/careers" 
+            <Link
+              href="/careers"
               className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-white/90 px-4 py-2 text-sm font-medium text-primary transition hover:border-primary hover:bg-primary/5"
             >
               <Briefcase className="w-4 h-4" />
@@ -93,9 +93,9 @@ export default function AdminLoginPage() {
       <div className="absolute top-20 left-1/2 -translate-x-1/2">
         <Image src={placeholderImages.logo} width="128" height="128" alt="Logo" data-ai-hint="company logo" />
       </div>
-      
-      <form 
-        onSubmit={submit} 
+
+      <form
+        onSubmit={submit}
         className="animate-in fade-in zoom-in-95 duration-500 bg-white/95 backdrop-blur-sm w-full max-w-md rounded-3xl p-8 shadow-2xl border border-primary/10"
       >
         <h1 className="text-3xl font-bold text-primary mb-2">Admin Sign In</h1>
