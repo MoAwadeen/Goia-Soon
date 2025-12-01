@@ -80,8 +80,12 @@
   }
   body {
     @apply bg-background text-foreground;
+    width: 100%;
+    max-width: 100%;
   }
   html {
     @apply scroll-smooth;
+    width: 100%;
+    max-width: 100%;
   }
 }

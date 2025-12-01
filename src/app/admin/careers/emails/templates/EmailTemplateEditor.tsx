@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
-import { Save, Eye, Code2, Loader2, Mail, CheckCircle, XCircle, Plus, Trash2, Star, Copy, Search, HelpCircle, Maximize2, Minimize2, Zap } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Save, Eye, Code2, Loader2, Mail, CheckCircle, XCircle, Plus, Trash2, Star, Copy } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { Input } from '@/components/ui/input'
+import { Input as InputComponent } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/hooks/use-toast'
@@ -27,14 +27,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Badge } from "@/components/ui/badge"
 
 interface EmailTemplate {
   id: string
@@ -138,11 +132,6 @@ const DEFAULT_REJECTION = `<!DOCTYPE html>
 </body>
 </html>`
 
-const PLACEHOLDERS = [
-  { key: '{applicantName}', description: 'Applicant\'s full name' },
-  { key: '{jobTitle}', description: 'Job title they applied for' },
-]
-
 export default function EmailTemplateEditor() {
   const { toast } = useToast()
   const [templates, setTemplates] = useState<EmailTemplate[]>([])
@@ -160,9 +149,6 @@ export default function EmailTemplateEditor() {
   })
   const [activeTab, setActiveTab] = useState<'accepted' | 'rejected'>('accepted')
   const [isNewTemplateDialogOpen, setIsNewTemplateDialogOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [fullScreenPreview, setFullScreenPreview] = useState(false)
-  const [showPlaceholders, setShowPlaceholders] = useState(false)
 
   useEffect(() => {
     loadTemplates()
@@ -182,7 +168,7 @@ export default function EmailTemplateEditor() {
         // Reset to defaults
         setSelectedTemplate(null)
         setTemplateName('')
-        setTemplateSubject(activeTab === 'accepted' ? 'Congratulations! Your application has been accepted' : 'Update on your application')
+        setTemplateSubject(activeTab === 'accepted' ? 'Congratulations! Your application for {jobTitle} has been accepted' : 'Update on your application for {jobTitle}')
         setTemplateContent(activeTab === 'accepted' ? DEFAULT_ACCEPTANCE : DEFAULT_REJECTION)
         setTemplateType(activeTab)
         setIsDefault(false)
@@ -237,22 +223,6 @@ export default function EmailTemplateEditor() {
     })
   }
 
-  const insertPlaceholder = (placeholder: string) => {
-    const textarea = document.querySelector('textarea[placeholder*="HTML"]') as HTMLTextAreaElement
-    if (textarea) {
-      const start = textarea.selectionStart
-      const end = textarea.selectionEnd
-      const text = templateContent
-      const newText = text.substring(0, start) + placeholder + text.substring(end)
-      setTemplateContent(newText)
-      setTimeout(() => {
-        textarea.focus()
-        textarea.setSelectionRange(start + placeholder.length, start + placeholder.length)
-      }, 0)
-    }
-    setShowPlaceholders(false)
-  }
-
   const handleSave = async () => {
     if (!templateName || !templateSubject || !templateContent) {
       toast({
@@ -296,7 +266,7 @@ export default function EmailTemplateEditor() {
       if (response.ok) {
         toast({
           title: 'Template saved successfully',
-          description: 'Your email template has been saved.',
+          description: 'Your email template has been saved to the database and will be used for sending emails.',
         })
         await loadTemplates()
         if (data.template) {
@@ -362,7 +332,7 @@ export default function EmailTemplateEditor() {
   const handleNewTemplate = () => {
     setSelectedTemplate(null)
     setTemplateName('')
-    setTemplateSubject(activeTab === 'accepted' ? 'Congratulations! Your application has been accepted' : 'Update on your application')
+    setTemplateSubject(activeTab === 'accepted' ? 'Congratulations! Your application for {jobTitle} has been accepted' : 'Update on your application for {jobTitle}')
     setTemplateContent(activeTab === 'accepted' ? DEFAULT_ACCEPTANCE : DEFAULT_REJECTION)
     setTemplateType(activeTab)
     setIsDefault(false)
@@ -375,21 +345,7 @@ export default function EmailTemplateEditor() {
       .replace(/{jobTitle}/g, previewData.jobTitle)
   }
 
-  const filteredTemplates = useMemo(() => {
-    const filtered = templates.filter(t => t.type === activeTab)
-    if (!searchQuery) return filtered
-    const query = searchQuery.toLowerCase()
-    return filtered.filter(t => 
-      t.name.toLowerCase().includes(query) ||
-      t.subject.toLowerCase().includes(query)
-    )
-  }, [templates, activeTab, searchQuery])
-
-  const hasPlaceholders = useMemo(() => {
-    return PLACEHOLDERS.some(p => 
-      templateContent.includes(p.key) || templateSubject.includes(p.key)
-    )
-  }, [templateContent, templateSubject])
+  const filteredTemplates = templates.filter(t => t.type === activeTab)
 
   if (loading) {
     return (
@@ -401,78 +357,48 @@ export default function EmailTemplateEditor() {
 
   return (
     <div className="space-y-6 w-full">
-      <Card className="rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-4 md:p-6">
+      <Card className="rounded-3xl border border-primary/10 bg-white/95 shadow-lg backdrop-blur-sm p-4 md:p-6 w-full">
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex-1">
-            <h2 className="text-xl md:text-2xl font-semibold text-primary">Email Templates</h2>
+          <div>
+            <h2 className="text-lg sm:text-xl font-semibold text-primary">Email Templates</h2>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-              Manage your email templates. Use placeholders: {'{'}applicantName{'}'}, {'{'}jobTitle{'}'}
+              Manage your email templates. Templates are saved to the database and used when sending emails.
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <Popover open={showPlaceholders} onOpenChange={setShowPlaceholders}>
-              <PopoverTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <HelpCircle className="w-4 h-4" />
-                  <span className="hidden sm:inline">Placeholders</span>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80" align="end">
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-sm">Available Placeholders</h4>
-                  {PLACEHOLDERS.map((placeholder) => (
-                    <div
-                      key={placeholder.key}
-                      className="flex items-center justify-between p-2 rounded-lg hover:bg-muted cursor-pointer"
-                      onClick={() => insertPlaceholder(placeholder.key)}
-                    >
-                      <div>
-                        <code className="text-xs font-mono bg-muted px-2 py-1 rounded">{placeholder.key}</code>
-                        <p className="text-xs text-muted-foreground mt-1">{placeholder.description}</p>
-                      </div>
-                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                        <Zap className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  ))}
+          <Dialog open={isNewTemplateDialogOpen} onOpenChange={setIsNewTemplateDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto">
+                <Plus className="w-4 h-4" /> 
+                <span className="hidden sm:inline">New Template</span>
+                <span className="sm:hidden">New</span>
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Create New Template</DialogTitle>
+                <DialogDescription>
+                  Create a new email template. You can customize it after creation.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div>
+                  <Label>Template Type</Label>
+                  <Select value={templateType} onValueChange={(v) => setTemplateType(v as 'accepted' | 'rejected')}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="accepted">Acceptance Email</SelectItem>
+                      <SelectItem value="rejected">Rejection Email</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-              </PopoverContent>
-            </Popover>
-            <Dialog open={isNewTemplateDialogOpen} onOpenChange={setIsNewTemplateDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
-                  <Plus className="w-4 h-4" /> 
-                  <span className="hidden sm:inline">New Template</span>
-                  <span className="sm:hidden">New</span>
+                <Button onClick={handleNewTemplate} className="w-full">
+                  Create Template
                 </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Create New Template</DialogTitle>
-                  <DialogDescription>
-                    Create a new email template. You can customize it after creation.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div>
-                    <Label>Template Type</Label>
-                    <Select value={templateType} onValueChange={(v) => setTemplateType(v as 'accepted' | 'rejected')}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="accepted">Acceptance Email</SelectItem>
-                        <SelectItem value="rejected">Rejection Email</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Button onClick={handleNewTemplate} className="w-full">
-                    Create Template
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'accepted' | 'rejected')}>
@@ -490,23 +416,10 @@ export default function EmailTemplateEditor() {
           </TabsList>
 
           <TabsContent value={activeTab} className="space-y-4 mt-4">
-            {/* Template Selector with Search */}
+            {/* Template Selector */}
             {filteredTemplates.length > 0 && (
               <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label>Select Template</Label>
-                  {filteredTemplates.length > 3 && (
-                    <div className="relative w-full sm:w-64">
-                      <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        placeholder="Search templates..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-8 h-8 text-sm"
-                      />
-                    </div>
-                  )}
-                </div>
+                <Label>Select Template</Label>
                 <div className="flex flex-wrap gap-2">
                   {filteredTemplates.map((template) => (
                     <div
@@ -558,7 +471,7 @@ export default function EmailTemplateEditor() {
                 <div className="space-y-4 order-2 lg:order-1">
                   <div>
                     <Label>Template Name</Label>
-                    <Input
+                    <InputComponent
                       value={templateName}
                       onChange={(e) => setTemplateName(e.target.value)}
                       placeholder="e.g., Standard Acceptance Email"
@@ -567,20 +480,15 @@ export default function EmailTemplateEditor() {
                   </div>
                   <div>
                     <Label>Email Subject</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        value={templateSubject}
-                        onChange={(e) => setTemplateSubject(e.target.value)}
-                        placeholder="e.g., Congratulations! Your application has been accepted"
-                        className="flex-1"
-                      />
-                      {hasPlaceholders && (
-                        <Badge variant="outline" className="flex items-center gap-1">
-                          <Zap className="w-3 h-3" />
-                          Variables
-                        </Badge>
-                      )}
-                    </div>
+                    <InputComponent
+                      value={templateSubject}
+                      onChange={(e) => setTemplateSubject(e.target.value)}
+                      placeholder="e.g., Congratulations! Your application for {jobTitle} has been accepted"
+                      className="flex-1 w-full"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Use placeholders: {'{'}applicantName{'}'}, {'{'}jobTitle{'}'}
+                    </p>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Checkbox
@@ -589,28 +497,17 @@ export default function EmailTemplateEditor() {
                       onCheckedChange={(checked) => setIsDefault(checked as boolean)}
                     />
                     <Label htmlFor="is-default" className="cursor-pointer text-sm">
-                      Set as default template
+                      Set as default template (this will be used when sending emails)
                     </Label>
                   </div>
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                        <Code2 className="w-4 h-4" /> HTML Code
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowPlaceholders(!showPlaceholders)}
-                        className="h-7 text-xs"
-                      >
-                        <HelpCircle className="w-3 h-3 mr-1" />
-                        Help
-                      </Button>
+                    <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                      <Code2 className="w-4 h-4" /> HTML Code
                     </div>
                     <Textarea
                       value={templateContent}
                       onChange={(e) => setTemplateContent(e.target.value)}
-                      className="font-mono text-xs sm:text-sm min-h-[300px] sm:min-h-[400px] w-full"
+                      className="font-mono text-xs sm:text-sm min-h-[400px] sm:min-h-[500px] w-full"
                       placeholder="Enter HTML template..."
                     />
                   </div>
@@ -631,46 +528,10 @@ export default function EmailTemplateEditor() {
                   </Button>
                 </div>
                 <div className="space-y-2 order-1 lg:order-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                      <Eye className="w-4 h-4" /> Preview
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setFullScreenPreview(!fullScreenPreview)}
-                      className="h-7"
-                    >
-                      {fullScreenPreview ? (
-                        <>
-                          <Minimize2 className="w-3 h-3 mr-1" />
-                          <span className="hidden sm:inline">Exit Fullscreen</span>
-                        </>
-                      ) : (
-                        <>
-                          <Maximize2 className="w-3 h-3 mr-1" />
-                          <span className="hidden sm:inline">Fullscreen</span>
-                        </>
-                      )}
-                    </Button>
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                    <Eye className="w-4 h-4" /> Preview
                   </div>
-                  <div className={`rounded-lg border border-primary/10 bg-white p-2 sm:p-4 overflow-auto ${
-                    fullScreenPreview 
-                      ? 'fixed inset-4 z-50 bg-white shadow-2xl' 
-                      : 'min-h-[300px] sm:min-h-[400px]'
-                  }`}>
-                    {fullScreenPreview && (
-                      <div className="sticky top-0 bg-white border-b pb-2 mb-2 flex items-center justify-between">
-                        <h3 className="font-semibold">Email Preview</h3>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setFullScreenPreview(false)}
-                        >
-                          <Minimize2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    )}
+                  <div className="rounded-lg border border-primary/10 bg-white p-3 sm:p-4 min-h-[400px] sm:min-h-[500px] overflow-auto w-full">
                     <div dangerouslySetInnerHTML={{ __html: getPreview(templateContent) }} />
                   </div>
                 </div>
@@ -686,7 +547,7 @@ export default function EmailTemplateEditor() {
           <div className="grid gap-2 sm:grid-cols-2">
             <div>
               <Label className="text-xs">Applicant Name</Label>
-              <Input
+              <InputComponent
                 type="text"
                 value={previewData.applicantName}
                 onChange={(e) => setPreviewData({ ...previewData, applicantName: e.target.value })}
@@ -695,7 +556,7 @@ export default function EmailTemplateEditor() {
             </div>
             <div>
               <Label className="text-xs">Job Title</Label>
-              <Input
+              <InputComponent
                 type="text"
                 value={previewData.jobTitle}
                 onChange={(e) => setPreviewData({ ...previewData, jobTitle: e.target.value })}

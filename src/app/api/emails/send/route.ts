@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getResendClient } from '@/lib/resend';
-import { getAcceptanceEmailTemplate, getRejectionEmailTemplate } from '@/lib/email-templates';
+import { getAcceptanceEmailTemplate, getRejectionEmailTemplate, getEmailTemplateSubject } from '@/lib/email-templates';
 import { createClient } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {
@@ -63,29 +63,12 @@ export async function POST(request: NextRequest) {
     };
 
     // Get the appropriate email template from database
-    const templateType = emailType === 'accepted' ? 'accepted' : 'rejected'
-    const { data: templateData } = await supabase
-      .from('email_templates')
-      .select('subject, html_content')
-      .eq('type', templateType)
-      .eq('is_default', true)
-      .single()
-
-    // Get the appropriate email template
     const htmlContent = emailType === 'accepted'
       ? await getAcceptanceEmailTemplate(emailData)
-      : await getRejectionEmailTemplate(emailData)
+      : await getRejectionEmailTemplate(emailData);
 
-    // Use template subject if available, otherwise use default
-    let subject = emailType === 'accepted'
-      ? `Congratulations! Your application for ${jobTitle} has been accepted`
-      : `Update on your application for ${jobTitle}`
-    
-    if (templateData?.subject) {
-      subject = templateData.subject
-        .replace(/{applicantName}/g, emailData.applicantName)
-        .replace(/{jobTitle}/g, emailData.jobTitle)
-    }
+    // Get subject from database template or use default
+    const subject = await getEmailTemplateSubject(emailType as 'accepted' | 'rejected', emailData);
 
     // Send email via Resend
     const { data, error } = await resend.emails.send({
